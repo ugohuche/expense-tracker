@@ -7,13 +7,5 @@ datasource db {
   provider = "mysql"
 }
 
-model MigrationTest {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-
-  @@map("migration_test")
-}
-
 
 // I want the signin/signup authentication flow to use both form and google signin. The following data are collected on signup

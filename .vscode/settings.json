@@ -1,32 +1,32 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
-    "VsCodeTaskButtons.tasks": [
-        {
-            "label": "Start Dev",
-            "task": "Start Dev"
-        },
-        {
-            "label": "PR - Tasks",
-            "task": "PR - Tasks"
-        },
-        {
-            "label": "PR - Tasks (Fix Formatting Only)",
-            "task": "PR - Tasks (Fix Formatting Only)"
-        },
-        {
-            "label": "PR - Tasks (Lint Only)",
-            "task": "PR - Tasks (Lint Only)"
-        },
-        {
-            "label": "PR - Tasks (Build Only)",
-            "task": "PR - Tasks (Build Only)"
-        }
-    ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "VsCodeTaskButtons.tasks": [
+    {
+      "label": "Start Dev",
+      "task": "Start Dev"
+    },
+    {
+      "label": "PR - Tasks",
+      "task": "PR - Tasks"
+    },
+    {
+      "label": "PR - Tasks (Fix Formatting Only)",
+      "task": "PR - Tasks (Fix Formatting Only)"
+    },
+    {
+      "label": "PR - Tasks (Lint Only)",
+      "task": "PR - Tasks (Lint Only)"
+    },
+    {
+      "label": "PR - Tasks (Build Only)",
+      "task": "PR - Tasks (Build Only)"
+    }
+  ]
 }

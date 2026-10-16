@@ -1,38 +1,38 @@
 {
-    "name": "expense-tracker",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "prisma generate && next dev --turbopack",
-        "db:generate": "prisma generate",
-        "db:migrate:dev": "prisma migrate dev",
-        "db:migrate:deploy": "prisma migrate deploy",
-        "ci-build": "prisma generate && next build --turbopack",
-        "build": "prisma generate && prisma migrate deploy && next build --turbopack",
-        "start": "prisma migrate deploy && next start",
-        "lint": "eslint",
-        "fix-formatting": "prettier --write ."
-    },
-    "dependencies": {
-        "@prisma/adapter-mariadb": "7.10.0",
-        "@prisma/client": "7.10.0",
-        "dotenv": "18.0.4",
-        "mariadb": "3.5.4",
-        "next": "16.4.0",
-        "react": "19.3.0",
-        "react-dom": "19.3.0"
-    },
-    "devDependencies": {
-        "@tailwindcss/turbopack": "^4",
-        "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
-        "eslint": "^9",
-        "eslint-config-next": "16.4.0",
-        "prisma": "7.10.0",
-        "prettier": "^3.9.10",
-        "tailwindcss": "^4",
-        "typescript": "^5"
-    },
-    "packageManager": "pnpm@11.20.0"
+  "name": "expense-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "prisma generate && next dev --turbopack",
+    "db:generate": "prisma generate",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "ci-build": "prisma generate && next build --turbopack",
+    "build": "prisma generate && prisma migrate deploy && next build --turbopack",
+    "start": "prisma migrate deploy && next start",
+    "lint": "eslint",
+    "fix-formatting": "prettier --write ."
+  },
+  "dependencies": {
+    "@prisma/adapter-mariadb": "7.10.0",
+    "@prisma/client": "7.10.0",
+    "dotenv": "18.0.4",
+    "mariadb": "3.5.4",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.0",
+    "prisma": "7.10.0",
+    "prettier": "^3.9.10",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@11.20.0"
 }
