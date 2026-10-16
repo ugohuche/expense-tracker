@@ -13,6 +13,26 @@
       "task": "Start Dev"
     },
     {
+      "label": "Prisma Dev",
+      "task": "Prisma Dev"
+    },
+    {
+      "label": "Prisma Generate",
+      "task": "Prisma Generate"
+    },
+    {
+      "label": "Prisma Migrate",
+      "task": "Prisma Migrate"
+    },
+    {
+      "label": "Prisma Reset",
+      "task": "Prisma Reset"
+    },
+    {
+      "label": "Prisma Studio",
+      "task": "Prisma Studio"
+    },
+    {
       "label": "PR - Tasks",
       "task": "PR - Tasks"
     },

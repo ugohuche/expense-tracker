@@ -7,6 +7,31 @@
       "command": "pnpm install ; pnpm dev"
     },
     {
+      "label": "Prisma Dev",
+      "type": "shell",
+      "command": "pnpm db:migrate:dev"
+    },
+    {
+      "label": "Prisma Generate",
+      "type": "shell",
+      "command": "pnpm db:generate"
+    },
+    {
+      "label": "Prisma Migrate",
+      "type": "shell",
+      "command": "pnpm db:migrate:deploy"
+    },
+    {
+      "label": "Prisma Reset",
+      "type": "shell",
+      "command": "pnpm db:reset"
+    },
+    {
+      "label": "Prisma Studio",
+      "type": "shell",
+      "command": "pnpm db:studio"
+    },
+    {
       "label": "PR - Tasks",
       "type": "shell",
       "command": "pnpm install ; pnpm fix-formatting ; pnpm lint ; pnpm build"
