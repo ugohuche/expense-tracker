@@ -14,6 +14,30 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Prisma and MySQL
+
+Before running the app or Prisma commands, copy `.env.example` to `.env` and set `DATABASE_URL` to your MySQL connection string. Keep `.env` local and do not commit database credentials. The development and build scripts generate Prisma Client automatically.
+
+Generate Prisma Client after changing `prisma/schema.prisma`:
+
+```bash
+pnpm db:generate
+```
+
+After adding models to the schema and configuring a reachable development database, create and apply a migration:
+
+```bash
+pnpm db:migrate:dev
+```
+
+Deployments can apply committed migrations explicitly with:
+
+```bash
+pnpm db:migrate:deploy
+```
+
+The build and start scripts do not apply migrations automatically.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

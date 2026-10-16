@@ -1,32 +1,52 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
-    "VsCodeTaskButtons.tasks": [
-        {
-            "label": "Start Dev",
-            "task": "Start Dev"
-        },
-        {
-            "label": "PR - Tasks",
-            "task": "PR - Tasks"
-        },
-        {
-            "label": "PR - Tasks (Fix Formatting Only)",
-            "task": "PR - Tasks (Fix Formatting Only)"
-        },
-        {
-            "label": "PR - Tasks (Lint Only)",
-            "task": "PR - Tasks (Lint Only)"
-        },
-        {
-            "label": "PR - Tasks (Build Only)",
-            "task": "PR - Tasks (Build Only)"
-        }
-    ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "VsCodeTaskButtons.tasks": [
+    {
+      "label": "Start Dev",
+      "task": "Start Dev"
+    },
+    {
+      "label": "Prisma Dev",
+      "task": "Prisma Dev"
+    },
+    {
+      "label": "Prisma Generate",
+      "task": "Prisma Generate"
+    },
+    {
+      "label": "Prisma Migrate",
+      "task": "Prisma Migrate"
+    },
+    {
+      "label": "Prisma Reset",
+      "task": "Prisma Reset"
+    },
+    {
+      "label": "Prisma Studio",
+      "task": "Prisma Studio"
+    },
+    {
+      "label": "PR - Tasks",
+      "task": "PR - Tasks"
+    },
+    {
+      "label": "PR - Tasks (Fix Formatting Only)",
+      "task": "PR - Tasks (Fix Formatting Only)"
+    },
+    {
+      "label": "PR - Tasks (Lint Only)",
+      "task": "PR - Tasks (Lint Only)"
+    },
+    {
+      "label": "PR - Tasks (Build Only)",
+      "task": "PR - Tasks (Build Only)"
+    }
+  ]
 }
