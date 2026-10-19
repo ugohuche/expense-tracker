@@ -7,5 +7,13 @@ datasource db {
   provider = "mysql"
 }
 
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
 
 // I want the signin/signup authentication flow to use both form and google signin. The following data are collected on signup

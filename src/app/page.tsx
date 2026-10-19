@@ -1,69 +1,165 @@
-import Image from "next/image";
+import { Suspense } from "react";
+import { Box, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+
+import AuthStatus from "@/components/auth/auth-status";
+
+const features = [
+  {
+    title: "Quick to log",
+    description: "Add an expense in seconds and keep your record current.",
+    accent: "brand.teal",
+  },
+  {
+    title: "Clear overview",
+    description: "See totals and categories at a glance, so nothing slips by.",
+    accent: "brand.gold",
+  },
+  {
+    title: "Better habits",
+    description: "Understand where your money goes and plan with confidence.",
+    accent: "brand.green",
+  },
+];
+
+function StatusFallback() {
+  return (
+    <Flex gap={3} direction={{ base: "column", sm: "row" }}>
+      <Box
+        h={12}
+        w={{ base: "full", sm: "40" }}
+        borderRadius="full"
+        bg="white"
+        borderWidth="1px"
+        borderColor="brand.mist"
+      />
+      <Box
+        h={12}
+        w={{ base: "full", sm: "32" }}
+        borderRadius="full"
+        bg="white"
+        borderWidth="1px"
+        borderColor="brand.mist"
+      />
+    </Flex>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <Flex
+      as="main"
+      position="relative"
+      flex="1"
+      minH="100dvh"
+      overflow="hidden"
+      bg="brand.soft-white"
+    >
+      <Box
+        position="absolute"
+        top="-140px"
+        right="-100px"
+        boxSize="360px"
+        borderRadius="full"
+        bg="brand.teal"
+        opacity={0.12}
+        filter="blur(90px)"
+      />
+      <Box
+        position="absolute"
+        bottom="-160px"
+        left="-120px"
+        boxSize="380px"
+        borderRadius="full"
+        bg="brand.gold"
+        opacity={0.14}
+        filter="blur(100px)"
+      />
+
+      <Flex
+        position="relative"
+        direction="column"
+        align="center"
+        justify="center"
+        gap={{ base: 10, sm: 14 }}
+        w="full"
+        px={6}
+        py={{ base: 12, sm: 20 }}
+      >
+        <Stack align="center" gap={6} textAlign="center" maxW="2xl">
+          <Flex
+            align="center"
+            gap={2}
+            bg="white"
+            borderWidth="1px"
+            borderColor="brand.mist"
+            borderRadius="full"
+            px={4}
+            py={1.5}
+            boxShadow="sm"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <Box boxSize="2" borderRadius="full" bg="brand.teal" />
+            <Text fontSize="sm" fontWeight="medium" color="brand.navy">
+              Expense Tracker
+            </Text>
+          </Flex>
+
+          <Heading
+            as="h1"
+            color="brand.navy"
+            fontSize={{ base: "4xl", sm: "5xl" }}
+            fontWeight="bold"
+            letterSpacing="tight"
+            lineHeight="1.1"
           >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+            Know where your money goes
+          </Heading>
+
+          <Text
+            color="brand.slate"
+            fontSize={{ base: "md", sm: "lg" }}
+            lineHeight="1.7"
+            maxW="xl"
+          >
+            Record your spending in seconds and see friendly, clear summaries —
+            so you can plan with confidence.
+          </Text>
+
+          <Suspense fallback={<StatusFallback />}>
+            <AuthStatus />
+          </Suspense>
+        </Stack>
+
+        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={5} w="full" maxW="4xl">
+          {features.map((feature) => (
+            <Box
+              key={feature.title}
+              bg="white"
+              borderWidth="1px"
+              borderColor="brand.mist"
+              borderRadius="2xl"
+              boxShadow="sm"
+              p={6}
+            >
+              <Flex
+                align="center"
+                justify="center"
+                boxSize="11"
+                mb={4}
+                borderRadius="xl"
+                bg={`${feature.accent}/12`}
+              >
+                <Box boxSize="2.5" borderRadius="full" bg={feature.accent} />
+              </Flex>
+              <Heading as="h2" size="md" mb={2} color="brand.navy">
+                {feature.title}
+              </Heading>
+              <Text color="brand.slate" fontSize="sm" lineHeight="1.6">
+                {feature.description}
+              </Text>
+            </Box>
+          ))}
+        </SimpleGrid>
+      </Flex>
+    </Flex>
   );
 }
