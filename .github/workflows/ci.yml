@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ vars.DATABASE_URL }}
 
     steps:
       - name: Checkout code
@@ -21,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
 
       - name: Get pnpm store directory
         shell: bash
@@ -47,6 +49,3 @@ jobs:
 
       - name: Build project
         run: pnpm ci-build
-        env:
-          # Prisma config requires a URL; the build does not connect to the database.
-          DATABASE_URL: "mysql://ci:ci@localhost:3306/expense_tracker"
