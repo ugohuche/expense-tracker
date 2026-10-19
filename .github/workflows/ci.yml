@@ -47,3 +47,6 @@ jobs:
 
       - name: Build project
         run: pnpm ci-build
+        env:
+          # Prisma config requires a URL; the build does not connect to the database.
+          DATABASE_URL: "mysql://ci:ci@localhost:3306/expense_tracker"
