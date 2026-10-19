@@ -7,5 +7,97 @@ datasource db {
   provider = "mysql"
 }
 
+enum ExpenseCategory {
+  FOOD          @map("food")
+  INTERNET      @map("internet")
+  DRINKS        @map("drinks")
+  TRANSPORT     @map("transport")
+  RENT          @map("rent")
+  UTILITIES     @map("utilities")
+  HEALTH        @map("health")
+  ENTERTAINMENT @map("entertainment")
+  SHOPPING      @map("shopping")
+  OTHER         @map("other")
+}
 
-// I want the signin/signup authentication flow to use both form and google signin. The following data are collected on signup
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  profile          Profile?
+  incomes          Income[]
+  expenses         Expense[]
+  monthlySummaries MonthlySummary[]
+
+  @@map("users")
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  firstName String?  @map("first_name") @db.VarChar(100)
+  lastName  String?  @map("last_name") @db.VarChar(100)
+  avatarUrl String?  @map("avatar_url") @db.VarChar(500)
+  currency  String   @default("USD") @db.VarChar(3)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model Income {
+  id          String   @id @default(uuid()) @db.Char(36)
+  userId      String   @map("user_id")
+  amount      Decimal  @db.Decimal(14, 2)
+  source      String?  @db.VarChar(150)
+  description String?  @db.Text
+  incomeDate  DateTime @map("income_date") @db.Date
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, incomeDate])
+  @@map("incomes")
+}
+
+model Expense {
+  id          String          @id @default(uuid()) @db.Char(36)
+  userId      String          @map("user_id")
+  category    ExpenseCategory
+  amount      Decimal         @db.Decimal(14, 2)
+  description String?         @db.Text
+  expenseDate DateTime        @map("expense_date") @db.Date
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, expenseDate])
+  @@index([category])
+  @@map("expenses")
+}
+
+model MonthlySummary {
+  id                 String           @id @default(uuid()) @db.Char(36)
+  userId             String           @map("user_id")
+  year               Int              @db.SmallInt
+  month              Int              @db.SmallInt
+  totalIncome        Decimal          @default(0) @map("total_income") @db.Decimal(14, 2)
+  totalExpenses      Decimal          @default(0) @map("total_expenses") @db.Decimal(14, 2)
+  netSavings         Decimal          @default(0) @map("net_savings") @db.Decimal(14, 2)
+  topExpenseCategory ExpenseCategory? @map("top_expense_category")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, year, month])
+  @@map("monthly_summaries")
+}
