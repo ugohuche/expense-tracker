@@ -1,31 +1,27 @@
-export const CATEGORY_OPTIONS = [
-  { name: "Books", emoji: "📖", tint: "violet.100" },
-  { name: "Courses", emoji: "🎓", tint: "violet.100" },
-  { name: "Tuition", emoji: "🧾", tint: "violet.100" },
-  { name: "Alcohol", emoji: "🍷", tint: "rose.100" },
-  { name: "Coffee", emoji: "☕", tint: "rose.100" },
-  { name: "Tea", emoji: "🫖", tint: "orange.100" },
-  { name: "Doctor", emoji: "🩺", tint: "blue.100" },
-  { name: "Pharmacy", emoji: "💊", tint: "blue.100" },
-  { name: "Cosmetics", emoji: "💄", tint: "pink.100" },
-  { name: "Haircut", emoji: "💇", tint: "pink.100" },
-  { name: "Dentist", emoji: "🦷", tint: "cyan.100" },
-  { name: "Mortgage", emoji: "🏠", tint: "blue.100" },
-  { name: "Electricity", emoji: "💡", tint: "yellow.100" },
-  { name: "Rent", emoji: "🔑", tint: "yellow.100" },
-  { name: "Internet", emoji: "🌐", tint: "blue.100" },
-  { name: "Phone", emoji: "📱", tint: "blue.100" },
-  { name: "Maintenance", emoji: "🔧", tint: "gray.100" },
-  { name: "Gym", emoji: "🏋️", tint: "green.100" },
-  { name: "Clothing", emoji: "👕", tint: "violet.100" },
-  { name: "Pets", emoji: "🐾", tint: "orange.100" },
-  { name: "Subscriptions", emoji: "📺", tint: "purple.100" },
-  { name: "Hobby", emoji: "🎨", tint: "pink.100" },
-  { name: "Concert", emoji: "🎤", tint: "purple.100" },
-  { name: "Cinema", emoji: "🎬", tint: "indigo.100" },
-  { name: "Miscellaneous", emoji: "📦", tint: "gray.100" },
-  { name: "Flight", emoji: "✈️", tint: "sky.100" },
-  { name: "Leasing", emoji: "🚗", tint: "teal.100" },
-] as const;
+import { ExpenseCategory } from "../../../generated/prisma/enums";
 
-export type Category = (typeof CATEGORY_OPTIONS)[number]["name"];
+export type Category = (typeof ExpenseCategory)[keyof typeof ExpenseCategory];
+
+export interface CategoryOption {
+  value: Category;
+  label: string;
+  emoji: string;
+  tint: string;
+}
+
+const CATEGORY_DISPLAY: Record<Category, Omit<CategoryOption, "value">> = {
+  FOOD: { label: "Food", emoji: "🍔", tint: "orange.100" },
+  INTERNET: { label: "Internet", emoji: "🌐", tint: "blue.100" },
+  DRINKS: { label: "Drinks", emoji: "🍷", tint: "rose.100" },
+  TRANSPORT: { label: "Transport", emoji: "🚌", tint: "teal.100" },
+  RENT: { label: "Rent", emoji: "🏠", tint: "yellow.100" },
+  UTILITIES: { label: "Utilities", emoji: "💡", tint: "yellow.100" },
+  HEALTH: { label: "Health", emoji: "🩺", tint: "green.100" },
+  ENTERTAINMENT: { label: "Entertainment", emoji: "🎬", tint: "purple.100" },
+  SHOPPING: { label: "Shopping", emoji: "🛍️", tint: "pink.100" },
+  OTHER: { label: "Other", emoji: "📦", tint: "gray.100" },
+};
+
+export const CATEGORY_OPTIONS: readonly CategoryOption[] = Object.values(
+  ExpenseCategory,
+).map((value) => ({ value, ...CATEGORY_DISPLAY[value] }));

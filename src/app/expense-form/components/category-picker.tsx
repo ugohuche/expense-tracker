@@ -14,7 +14,7 @@ export interface CategoryPickerProps {
 export function CategoryPicker({ value, onValueChange }: CategoryPickerProps) {
   const [query, setQuery] = useState("");
   const options = CATEGORY_OPTIONS.filter((option) =>
-    option.name.toLowerCase().includes(query.trim().toLowerCase()),
+    option.label.toLowerCase().includes(query.trim().toLowerCase()),
   );
 
   return (
@@ -45,10 +45,10 @@ export function CategoryPicker({ value, onValueChange }: CategoryPickerProps) {
         <HStack gap="3" pb="2" overflowX="auto" aria-label="Categories">
           {options.map((option) => (
             <CategoryTile
-              key={option.name}
+              key={option.value}
               option={option}
-              selected={option.name === value}
-              onSelect={() => onValueChange(option.name)}
+              selected={option.value === value}
+              onSelect={() => onValueChange(option.value)}
             />
           ))}
         </HStack>
@@ -108,7 +108,7 @@ function CategoryTile({ option, selected, onSelect }: CategoryTileProps) {
         {option.emoji}
       </Box>
       <Text fontSize="sm" color="black" whiteSpace="nowrap">
-        {option.name}
+        {option.label}
       </Text>
     </TileButton>
   );

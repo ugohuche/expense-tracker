@@ -13,12 +13,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { CategoryPicker } from "./category-picker";
+import { expenseSchema } from "../expense-schema";
 import type { Category } from "../constants/categories";
 
 export interface ExpenseFormProps {
   initialCategory?: Category;
   onCategoryChange?: (category: Category) => void;
 }
+
+type FormErrors = Partial<
+  Record<"category" | "amount" | "description" | "expenseDate", string>
+>;
 
 function today(): string {
   const now = new Date();
@@ -42,6 +47,8 @@ export function ExpenseForm({
     initialCategory ?? null,
   );
   const [notes, setNotes] = React.useState("");
+  const [errors, setErrors] = React.useState<FormErrors>({});
+  const [isValid, setIsValid] = React.useState(false);
   const dateInputRef = React.useRef<HTMLInputElement>(null);
 
   React.useEffect(() => {
@@ -53,6 +60,38 @@ export function ExpenseForm({
   const handleCategoryChange = (value: Category) => {
     setCategory(value);
     onCategoryChange?.(value);
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsValid(false);
+
+    const result = expenseSchema.safeParse({
+      category: category ?? undefined,
+      amount,
+      description: notes,
+      expenseDate: dateInputRef.current?.value ?? "",
+    });
+
+    if (!result.success) {
+      const nextErrors: FormErrors = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+        if (
+          field === "category" ||
+          field === "amount" ||
+          field === "description" ||
+          field === "expenseDate"
+        ) {
+          nextErrors[field] ??= issue.message;
+        }
+      }
+      setErrors(nextErrors);
+      return;
+    }
+
+    setErrors({});
+    setIsValid(true);
   };
 
   return (
@@ -79,13 +118,8 @@ export function ExpenseForm({
         <CloseIcon />
       </IconButton>
 
-      <VStack
-        as="form"
-        gap="6"
-        align="stretch"
-        onSubmit={(event) => event.preventDefault()}
-      >
-        <Field.Root gap="2">
+      <VStack as="form" gap="6" align="stretch" onSubmit={handleSubmit}>
+        <Field.Root gap="2" invalid={Boolean(errors.amount)}>
           <Field.Label {...labelProps}>Amount</Field.Label>
           <Input
             type="number"
@@ -95,6 +129,9 @@ export function ExpenseForm({
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
           />
+          {errors.amount ? (
+            <Field.ErrorText>{errors.amount}</Field.ErrorText>
+          ) : null}
         </Field.Root>
 
         <VStack gap="3" align="stretch">
@@ -108,14 +145,22 @@ export function ExpenseForm({
             value={category}
             onValueChange={handleCategoryChange}
           />
+          {errors.category ? (
+            <Text fontSize="sm" color="red.500">
+              {errors.category}
+            </Text>
+          ) : null}
         </VStack>
 
-        <Field.Root gap="2">
+        <Field.Root gap="2" invalid={Boolean(errors.expenseDate)}>
           <Field.Label {...labelProps}>Date</Field.Label>
           <Input ref={dateInputRef} type="date" color="black" />
+          {errors.expenseDate ? (
+            <Field.ErrorText>{errors.expenseDate}</Field.ErrorText>
+          ) : null}
         </Field.Root>
 
-        <Field.Root gap="2">
+        <Field.Root gap="2" invalid={Boolean(errors.description)}>
           <Field.Label {...labelProps}>Notes</Field.Label>
           <Textarea
             minH="88px"
@@ -123,6 +168,9 @@ export function ExpenseForm({
             value={notes}
             onChange={(event) => setNotes(event.target.value)}
           />
+          {errors.description ? (
+            <Field.ErrorText>{errors.description}</Field.ErrorText>
+          ) : null}
         </Field.Root>
 
         <Button
@@ -135,6 +183,12 @@ export function ExpenseForm({
         >
           ADD
         </Button>
+
+        {isValid ? (
+          <Text fontSize="sm" color="green.600" textAlign="center">
+            Expense details are valid. Saving is not connected yet.
+          </Text>
+        ) : null}
       </VStack>
     </Box>
   );
