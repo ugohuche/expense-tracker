@@ -2,7 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { Suspense } from "react";
-import { Box, Heading, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Link as ChakraLink,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import LoginForm from "@/components/auth/login-form";
 
