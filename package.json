@@ -16,6 +16,7 @@
     "fix-formatting": "prettier --write ."
   },
   "dependencies": {
+    "@emotion/styled": "11.14.1",
     "@chakra-ui/react": "^3.37.0",
     "@emotion/cache": "11.14.0",
     "@emotion/react": "^11.14.0",
@@ -23,6 +24,7 @@
     "@prisma/client": "7.10.0",
     "bcryptjs": "^3.0.3",
     "dotenv": "18.0.4",
+    "framer-motion": "14.3.0",
     "mariadb": "3.5.4",
     "next": "16.4.2",
     "next-auth": "5.0.0-beta.32",
