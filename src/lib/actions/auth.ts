@@ -38,7 +38,12 @@ export async function signup(
   const passwordHash = await bcrypt.hash(password, 10);
 
   await prisma.user.create({
-    data: { name, email, passwordHash },
+    data: {
+      name,
+      email,
+      passwordHash,
+      profile: { create: {} },
+    },
   });
 
   redirect("/login?registered=1");
