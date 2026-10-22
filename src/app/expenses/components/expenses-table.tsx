@@ -1,20 +1,27 @@
 "use client";
 
-import * as React from "react";
 import {
   Box,
   Button,
   Flex,
   HStack,
+  IconButton,
   Stack,
   Table,
   Text,
 } from "@chakra-ui/react";
 
 import { COLORS } from "../constants/colors";
+import {
+  focusRing,
+  primaryButtonStyles,
+  secondaryButtonStyles,
+  surfaceStyles,
+  tableHeaderStyles,
+} from "../constants/styles";
 import type { ExpenseRecord } from "../types";
 import { formatCurrency, formatDate, getCategoryOption } from "../utils";
-import { ExpenseDetailsDialog } from "./expense-details-dialog";
+import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
 
 interface ExpensesTableProps {
   expenses: ExpenseRecord[];
@@ -26,8 +33,8 @@ interface ExpensesTableProps {
   hasAnyExpenses: boolean;
   onPageChange: (page: number) => void;
   onClearFilters: () => void;
-  onEditExpense: (expense: ExpenseRecord) => void;
-  onDeleteExpense: (expense: ExpenseRecord) => void;
+  onViewExpense: (expense: ExpenseRecord) => void;
+  onAddExpense: () => void;
 }
 
 export function ExpensesTable({
@@ -40,60 +47,26 @@ export function ExpensesTable({
   hasAnyExpenses,
   onPageChange,
   onClearFilters,
-  onEditExpense,
-  onDeleteExpense,
+  onViewExpense,
+  onAddExpense,
 }: ExpensesTableProps) {
-  const [viewedExpense, setViewedExpense] =
-    React.useState<ExpenseRecord | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = React.useState(false);
-  const pendingActionRef = React.useRef<(() => void) | null>(null);
-
-  const openDetails = (expense: ExpenseRecord) => {
-    pendingActionRef.current = null;
-    setViewedExpense(expense);
-    setIsDetailsOpen(true);
-  };
-
-  const closeDetails = () => {
-    setIsDetailsOpen(false);
-  };
-
-  const closeDetailsThen = (action: () => void) => {
-    pendingActionRef.current = action;
-    setIsDetailsOpen(false);
-  };
-
-  const handleDetailsExitComplete = () => {
-    const pendingAction = pendingActionRef.current;
-    pendingActionRef.current = null;
-    pendingAction?.();
-  };
-
   const start = totalCount === 0 ? 0 : (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, totalCount);
-  const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
 
   return (
-    <Box
-      bg={COLORS.card}
-      borderWidth="1px"
-      borderColor={COLORS.border}
-      borderRadius="2xl"
-      overflow="hidden"
-    >
+    <Box {...surfaceStyles} overflow="hidden">
       <Flex
-        direction={{ base: "column", sm: "row" }}
-        align={{ base: "flex-start", sm: "center" }}
+        align="center"
         justify="space-between"
-        gap={2}
+        gap={3}
         px={{ base: 4, md: 5 }}
         py={4}
       >
         <Box>
           <Text fontWeight="semibold" color={COLORS.text}>
-            All expenses
+            Expense history
           </Text>
-          <Text fontSize="sm" color={COLORS.muted}>
+          <Text mt={0.5} fontSize="sm" color={COLORS.muted}>
             {hasAnyExpenses
               ? `${totalCount} ${totalCount === 1 ? "expense" : "expenses"}${
                   hasFilters
@@ -102,94 +75,49 @@ export function ExpensesTable({
                 }`
               : "No expenses recorded yet"}
           </Text>
-          {totalCount > 0 ? (
-            <Text mt={1} fontSize="xs" color={COLORS.muted}>
-              Select a row to view its details and actions.
-            </Text>
-          ) : null}
         </Box>
-        <Flex
-          align="center"
-          gap={1.5}
-          bg="rgba(242, 169, 0, 0.12)"
-          borderWidth="1px"
-          borderColor="rgba(242, 169, 0, 0.32)"
-          borderRadius="full"
-          px={3}
-          py={1}
-        >
-          <Box boxSize="1.5" borderRadius="full" bg={COLORS.gold} />
-          <Text fontSize="xs" fontWeight="medium" color={COLORS.gold}>
-            Saved in this browser
-          </Text>
-        </Flex>
       </Flex>
 
-      <Text
-        id="expense-table-instructions"
-        position="absolute"
-        w="1px"
-        h="1px"
-        p="0"
-        m="-1px"
-        overflow="hidden"
-        whiteSpace="nowrap"
-        borderWidth="0"
-        clip="rect(0, 0, 0, 0)"
-      >
-        Select a row to view its details and actions. Press Enter or Space to
-        open the details dialog.
-      </Text>
-
-      <Table.ScrollArea
-        borderTopWidth="1px"
-        borderColor={COLORS.border}
-        maxH="34rem"
-      >
+      <Table.ScrollArea borderTopWidth="1px" borderColor={COLORS.border}>
         <Table.Root
           size="md"
           variant="line"
-          stickyHeader
+          aria-label="Expense history"
           bg="transparent"
           css={{
             "& th, & td": { borderColor: COLORS.border },
           }}
         >
           <Table.Header>
-            <Table.Row bg={COLORS.page}>
-              <Table.ColumnHeader color={COLORS.muted} fontSize="xs">
+            <Table.Row>
+              <Table.ColumnHeader {...tableHeaderStyles}>
                 Description
               </Table.ColumnHeader>
-              <Table.ColumnHeader color={COLORS.muted} fontSize="xs">
+              <Table.ColumnHeader
+                display={{ base: "none", md: "table-cell" }}
+                {...tableHeaderStyles}
+              >
                 Category
               </Table.ColumnHeader>
-              <Table.ColumnHeader color={COLORS.muted} fontSize="xs">
+              <Table.ColumnHeader
+                display={{ base: "none", md: "table-cell" }}
+                {...tableHeaderStyles}
+              >
                 Date
               </Table.ColumnHeader>
-              <Table.ColumnHeader
-                color={COLORS.muted}
-                fontSize="xs"
-                textAlign="right"
-              >
+              <Table.ColumnHeader textAlign="right" {...tableHeaderStyles}>
                 Amount
+              </Table.ColumnHeader>
+              <Table.ColumnHeader bg={COLORS.raised} w="12">
+                <Text srOnly>Actions</Text>
               </Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body>
             {expenses.length === 0 ? (
-              <Table.Row bg={COLORS.card}>
-                <Table.Cell colSpan={4} py={12} textAlign="center">
-                  <Stack align="center" gap={3}>
-                    <Flex
-                      align="center"
-                      justify="center"
-                      boxSize="12"
-                      borderRadius="full"
-                      bg={COLORS.raised}
-                      color={COLORS.muted}
-                    >
-                      <SearchIcon />
-                    </Flex>
+              <Table.Row>
+                <Table.Cell colSpan={5} px={4}>
+                  <Stack align="center" gap={3} py={12} textAlign="center">
                     <Box>
                       <Text fontWeight="semibold" color={COLORS.text}>
                         {hasAnyExpenses
@@ -199,61 +127,54 @@ export function ExpensesTable({
                       <Text mt={1} fontSize="sm" color={COLORS.muted}>
                         {hasAnyExpenses
                           ? "Try a different search, category, or date range."
-                          : "Use Add Expense to record your first expense. It will appear here immediately."}
+                          : "Add your first expense to start tracking your spending."}
                       </Text>
                     </Box>
                     {hasAnyExpenses && hasFilters ? (
                       <Button
-                        size="sm"
-                        variant="outline"
-                        borderColor={COLORS.border}
-                        color={COLORS.gold}
+                        type="button"
                         onClick={onClearFilters}
+                        {...secondaryButtonStyles}
                       >
                         Clear filters
                       </Button>
-                    ) : null}
+                    ) : (
+                      <Button
+                        type="button"
+                        onClick={onAddExpense}
+                        {...primaryButtonStyles}
+                      >
+                        Add expense
+                      </Button>
+                    )}
                   </Stack>
                 </Table.Cell>
               </Table.Row>
             ) : (
               expenses.map((expense) => {
                 const category = getCategoryOption(expense.category);
-                const isSelected =
-                  isDetailsOpen && viewedExpense?.id === expense.id;
+                const description =
+                  expense.description?.trim() || "Untitled expense";
+                const formattedAmount = formatCurrency(
+                  expense.amount,
+                  expense.currency,
+                );
 
                 return (
                   <Table.Row
                     key={expense.id}
-                    bg={isSelected ? "rgba(242, 169, 0, 0.08)" : COLORS.card}
-                    boxShadow={
-                      isSelected ? "inset 3px 0 0 0 #F2A900" : undefined
-                    }
-                    data-selected={isSelected ? "true" : undefined}
+                    data-expense-id={expense.id}
+                    bg={COLORS.card}
                     _hover={{ bg: COLORS.raised }}
                     cursor="pointer"
-                    tabIndex={0}
-                    aria-describedby="expense-table-instructions"
-                    aria-haspopup="dialog"
-                    onClick={() => openDetails(expense)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        openDetails(expense);
-                      }
-                    }}
+                    onClick={() => onViewExpense(expense)}
                     transition="background-color 0.15s ease"
-                    _focusVisible={{
-                      outline: "2px solid",
-                      outlineColor: COLORS.gold,
-                      outlineOffset: "-2px",
-                    }}
                   >
                     <Table.Cell>
                       {expense.description ? (
                         <Text
                           display="block"
-                          maxW={{ base: "13rem", md: "26rem" }}
+                          maxW={{ base: "11rem", md: "24rem" }}
                           truncate
                           color={COLORS.text}
                           title={expense.description}
@@ -265,36 +186,57 @@ export function ExpensesTable({
                           No description
                         </Text>
                       )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Flex
-                        display="inline-flex"
-                        align="center"
-                        gap={1.5}
-                        bg={category.tint}
-                        color="#1A202C"
-                        borderRadius="full"
-                        px={2.5}
-                        py={1}
+                      <Text
+                        display={{ base: "block", md: "none" }}
+                        mt={1}
                         fontSize="xs"
-                        fontWeight="medium"
-                        whiteSpace="nowrap"
+                        color={COLORS.muted}
                       >
-                        <span aria-hidden="true">{category.emoji}</span>
-                        {category.label}
-                      </Flex>
+                        {category.label} · {formatDate(expense.expenseDate)}
+                      </Text>
                     </Table.Cell>
-                    <Table.Cell whiteSpace="nowrap" color={COLORS.muted}>
+                    <Table.Cell
+                      display={{ base: "none", md: "table-cell" }}
+                      whiteSpace="nowrap"
+                      fontSize="sm"
+                      color={COLORS.muted}
+                    >
+                      {category.label}
+                    </Table.Cell>
+                    <Table.Cell
+                      display={{ base: "none", md: "table-cell" }}
+                      whiteSpace="nowrap"
+                      fontSize="sm"
+                      color={COLORS.muted}
+                    >
                       {formatDate(expense.expenseDate)}
                     </Table.Cell>
                     <Table.Cell
                       textAlign="right"
                       whiteSpace="nowrap"
-                      fontWeight="semibold"
+                      fontWeight="medium"
                       color={COLORS.text}
                       fontVariantNumeric="tabular-nums"
                     >
-                      {formatCurrency(expense.amount, expense.currency)}
+                      {formattedAmount}
+                    </Table.Cell>
+                    <Table.Cell textAlign="right" pr={{ base: 3, md: 4 }}>
+                      <IconButton
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        aria-label={`View details for ${description}, ${formattedAmount}`}
+                        aria-haspopup="dialog"
+                        color={COLORS.muted}
+                        _hover={{ bg: COLORS.raisedHover, color: COLORS.text }}
+                        _focusVisible={focusRing}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onViewExpense(expense);
+                        }}
+                      >
+                        <ChevronRightIcon size={18} />
+                      </IconButton>
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -313,124 +255,50 @@ export function ExpensesTable({
           borderTopWidth="1px"
           borderColor={COLORS.border}
           px={{ base: 4, md: 5 }}
-          py={4}
+          py={3}
         >
           <Text fontSize="sm" color={COLORS.muted}>
             Showing {start}–{end} of {totalCount}
           </Text>
-          <HStack gap={1}>
-            <Button
+          <HStack gap={2}>
+            <IconButton
+              type="button"
               size="sm"
               variant="ghost"
+              aria-label="Previous page"
               color={COLORS.muted}
               disabled={page <= 1}
-              onClick={() => onPageChange(page - 1)}
-              aria-label="Previous page"
               _hover={{ bg: COLORS.raised, color: COLORS.text }}
+              _focusVisible={focusRing}
+              onClick={() => onPageChange(page - 1)}
             >
               <ChevronLeftIcon />
-            </Button>
-            {pages.map((pageNumber) => {
-              const isActive = pageNumber === page;
-
-              return (
-                <Button
-                  key={pageNumber}
-                  size="sm"
-                  variant="ghost"
-                  minW="9"
-                  px={0}
-                  aria-label={`Page ${pageNumber}`}
-                  aria-current={isActive ? "page" : undefined}
-                  bg={isActive ? "rgba(242, 169, 0, 0.14)" : undefined}
-                  borderWidth={isActive ? "1px" : "0"}
-                  borderColor="rgba(242, 169, 0, 0.35)"
-                  color={isActive ? COLORS.gold : COLORS.muted}
-                  fontWeight={isActive ? "semibold" : "normal"}
-                  onClick={() => onPageChange(pageNumber)}
-                  _hover={{ bg: COLORS.raised, color: COLORS.text }}
-                >
-                  {pageNumber}
-                </Button>
-              );
-            })}
-            <Button
+            </IconButton>
+            <Text
+              minW="20"
+              textAlign="center"
+              fontSize="sm"
+              color={COLORS.muted}
+              fontVariantNumeric="tabular-nums"
+            >
+              Page {page} of {pageCount}
+            </Text>
+            <IconButton
+              type="button"
               size="sm"
               variant="ghost"
+              aria-label="Next page"
               color={COLORS.muted}
               disabled={page >= pageCount}
-              onClick={() => onPageChange(page + 1)}
-              aria-label="Next page"
               _hover={{ bg: COLORS.raised, color: COLORS.text }}
+              _focusVisible={focusRing}
+              onClick={() => onPageChange(page + 1)}
             >
               <ChevronRightIcon />
-            </Button>
+            </IconButton>
           </HStack>
         </Flex>
       ) : null}
-
-      <ExpenseDetailsDialog
-        open={isDetailsOpen}
-        expense={viewedExpense}
-        onClose={closeDetails}
-        onEdit={(expense) => closeDetailsThen(() => onEditExpense(expense))}
-        onDelete={(expense) => closeDetailsThen(() => onDeleteExpense(expense))}
-        onExitComplete={handleDetailsExitComplete}
-      />
     </Box>
-  );
-}
-
-function SearchIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <circle cx="11" cy="11" r="7" />
-      <line x1="16.5" y1="16.5" x2="21" y2="21" />
-    </svg>
-  );
-}
-
-function ChevronLeftIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m15 18-6-6 6-6" />
-    </svg>
-  );
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="m9 18 6-6-6-6" />
-    </svg>
   );
 }

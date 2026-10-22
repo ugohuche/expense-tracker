@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, Skeleton, Stack } from "@chakra-ui/react";
+import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
 
 import { COLORS } from "./constants/colors";
 
@@ -8,35 +8,39 @@ export default function Loading() {
       as="main"
       minH="100dvh"
       bg={COLORS.page}
-      px={{ base: 4, md: 8 }}
+      color={COLORS.text}
+      fontFamily="var(--font-geist-sans), Arial, Helvetica, sans-serif"
+      px={{ base: 4, md: 6 }}
       py={{ base: 8, md: 10 }}
     >
-      <Stack maxW="7xl" mx="auto" gap={{ base: 5, md: 6 }}>
+      <Stack maxW="6xl" mx="auto" gap={6}>
         <Flex
-          direction={{ base: "column", md: "row" }}
+          direction={{ base: "column", sm: "row" }}
           justify="space-between"
-          align={{ base: "stretch", md: "flex-start" }}
+          align={{ base: "stretch", sm: "flex-start" }}
           gap={4}
         >
-          <Stack gap={3}>
-            <Skeleton h="4" w="36" bg={COLORS.raised} />
-            <Skeleton h="10" w="72" bg={COLORS.raised} />
-            <Skeleton h="4" w="96" maxW="full" bg={COLORS.raised} />
-          </Stack>
-          <Skeleton h="11" w="40" borderRadius="full" bg={COLORS.raised} />
+          <Box>
+            <Skeleton h="8" w="40" bg={COLORS.raised} />
+            <Skeleton mt={3} h="4" w="72" maxW="full" bg={COLORS.raised} />
+          </Box>
+          <Skeleton h="10" w="32" borderRadius="lg" bg={COLORS.raised} />
         </Flex>
 
-        <SimpleGrid
-          columns={{ base: 1, sm: 2, xl: 4 }}
-          gap={{ base: 3, md: 4 }}
-        >
-          {Array.from({ length: 4 }, (_, index) => (
-            <Skeleton key={index} h="36" borderRadius="2xl" bg={COLORS.card} />
-          ))}
-        </SimpleGrid>
+        <Skeleton
+          h={{ base: "64", xl: "28" }}
+          borderRadius="xl"
+          bg={COLORS.raised}
+        />
 
-        <Skeleton h="20" borderRadius="2xl" bg={COLORS.card} />
-        <Skeleton h="96" borderRadius="2xl" bg={COLORS.card} />
+        <Stack gap={4}>
+          <Skeleton
+            h={{ base: "44", lg: "10" }}
+            borderRadius="lg"
+            bg={COLORS.raised}
+          />
+          <Skeleton h="96" borderRadius="xl" bg={COLORS.raised} />
+        </Stack>
       </Stack>
     </Box>
   );

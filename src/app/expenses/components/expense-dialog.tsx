@@ -6,6 +6,8 @@ import { ExpenseForm } from "@/app/expenses/expense-form/components/expense-form
 import type { Currency } from "@/app/expenses/expense-form/constants/currencies";
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
 
+import { COLORS } from "../constants/colors";
+import { dialogSurfaceStyles } from "../constants/styles";
 import type { ExpenseRecord } from "../types";
 
 interface ExpenseDialogProps {
@@ -24,7 +26,7 @@ export function ExpenseDialog({
   defaultCurrency = "USD",
 }: ExpenseDialogProps) {
   const isEditing = expense !== null;
-  const title = isEditing ? "Edit Expense" : "Add New Expense";
+  const title = isEditing ? "Edit expense" : "Add expense";
 
   return (
     <Dialog.Root
@@ -36,19 +38,15 @@ export function ExpenseDialog({
       }}
       size="lg"
       placement="center"
-      scrollBehavior="inside"
       lazyMount
       unmountOnExit
     >
-      <Dialog.Backdrop bg="rgba(3, 6, 12, 0.8)" backdropFilter="blur(6px)" />
+      <Dialog.Backdrop bg={COLORS.backdrop} />
       <Dialog.Positioner p={4}>
         <Dialog.Content
-          bg="transparent"
-          p={0}
-          shadow="none"
-          borderWidth="0"
+          {...dialogSurfaceStyles}
           w="full"
-          maxW="25rem"
+          maxW="27rem"
           maxH="calc(100dvh - 2rem)"
           overflowY="auto"
         >
@@ -68,7 +66,7 @@ export function ExpenseDialog({
           <ExpenseForm
             key={expense?.id ?? "new"}
             heading={title}
-            submitLabel={isEditing ? "Save Changes" : "Save Expense"}
+            submitLabel={isEditing ? "Save changes" : "Save expense"}
             initialCategory={expense?.category}
             initialCurrency={expense?.currency ?? defaultCurrency}
             initialAmount={expense ? String(expense.amount) : undefined}

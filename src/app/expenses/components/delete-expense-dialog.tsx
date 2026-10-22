@@ -1,8 +1,13 @@
 "use client";
 
-import { Box, Button, Dialog, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Dialog, Flex, Text } from "@chakra-ui/react";
 
 import { COLORS } from "../constants/colors";
+import {
+  dangerButtonStyles,
+  dialogSurfaceStyles,
+  secondaryButtonStyles,
+} from "../constants/styles";
 import type { ExpenseRecord } from "../types";
 import { formatCurrency, formatDate, getCategoryOption } from "../utils";
 
@@ -35,17 +40,9 @@ export function DeleteExpenseDialog({
       lazyMount
       unmountOnExit
     >
-      <Dialog.Backdrop bg="rgba(3, 6, 12, 0.8)" backdropFilter="blur(6px)" />
+      <Dialog.Backdrop bg={COLORS.backdrop} />
       <Dialog.Positioner p={4}>
-        <Dialog.Content
-          role="alertdialog"
-          bg={COLORS.card}
-          borderWidth="1px"
-          borderColor={COLORS.border}
-          rounded="2xl"
-          p={{ base: 5, md: 6 }}
-          shadow="2xl"
-        >
+        <Dialog.Content role="alertdialog" {...dialogSurfaceStyles}>
           <Dialog.Title
             fontSize="lg"
             fontWeight="semibold"
@@ -55,44 +52,30 @@ export function DeleteExpenseDialog({
             Delete expense?
           </Dialog.Title>
           <Dialog.Description mt={2} fontSize="sm" color={COLORS.muted}>
-            This will permanently remove the expense below from this browser.
-            This action cannot be undone.
+            This will remove the expense from this browser. This action cannot
+            be undone.
           </Dialog.Description>
 
           {expense ? (
             <Box
               mt={5}
-              borderWidth="1px"
+              py={4}
+              borderTopWidth="1px"
+              borderBottomWidth="1px"
               borderColor={COLORS.border}
-              bg={COLORS.raised}
-              rounded="xl"
-              p={4}
             >
-              <Text fontWeight="semibold" color={COLORS.text}>
-                {description}
-              </Text>
-              <Flex
-                mt={2}
-                direction={{ base: "column", sm: "row" }}
-                align={{ base: "flex-start", sm: "center" }}
-                justify="space-between"
-                gap={2}
-              >
-                <HStack gap={2} fontSize="sm" color={COLORS.muted}>
-                  {category ? (
-                    <Box as="span" whiteSpace="nowrap">
-                      {category.emoji} {category.label}
-                    </Box>
-                  ) : null}
-                  <Box as="span" aria-hidden="true">
-                    ·
-                  </Box>
-                  <Box as="span" whiteSpace="nowrap">
+              <Flex align="flex-start" justify="space-between" gap={4}>
+                <Box minW={0}>
+                  <Text fontWeight="medium" color={COLORS.text}>
+                    {description}
+                  </Text>
+                  <Text mt={1.5} fontSize="sm" color={COLORS.muted}>
+                    {category ? `${category.label} · ` : ""}
                     {formatDate(expense.expenseDate)}
-                  </Box>
-                </HStack>
+                  </Text>
+                </Box>
                 <Text
-                  fontSize="sm"
+                  flexShrink={0}
                   fontWeight="semibold"
                   color={COLORS.text}
                   fontVariantNumeric="tabular-nums"
@@ -103,48 +86,25 @@ export function DeleteExpenseDialog({
             </Box>
           ) : null}
 
-          <HStack mt={6} gap={3} align="stretch">
+          <Flex mt={6} gap={3} align="stretch">
             <Button
               type="button"
               flex="1"
-              h="11"
-              variant="outline"
-              bg={COLORS.raised}
-              borderColor={COLORS.border}
-              color={COLORS.text}
-              fontSize="sm"
-              fontWeight="medium"
               autoFocus
-              _hover={{ bg: "#1A2433", borderColor: "#2A3A52" }}
-              _focusVisible={{
-                outline: "2px solid",
-                outlineColor: COLORS.gold,
-                outlineOffset: "2px",
-              }}
               onClick={onClose}
+              {...secondaryButtonStyles}
             >
               Cancel
             </Button>
             <Button
               type="button"
               flex="1"
-              h="11"
-              bg={COLORS.red}
-              color="#1A0F0C"
-              fontSize="sm"
-              fontWeight="semibold"
-              _hover={{ bg: "#FF9B85" }}
-              _active={{ bg: "#E8654C" }}
-              _focusVisible={{
-                outline: "2px solid",
-                outlineColor: COLORS.gold,
-                outlineOffset: "2px",
-              }}
               onClick={onConfirm}
+              {...dangerButtonStyles}
             >
               Delete expense
             </Button>
-          </HStack>
+          </Flex>
         </Dialog.Content>
       </Dialog.Positioner>
     </Dialog.Root>

@@ -11,6 +11,7 @@ import {
   IconButton,
   Input,
   NativeSelect,
+  SimpleGrid,
   Text,
   Textarea,
   VStack,
@@ -20,7 +21,15 @@ import { CATEGORY_OPTIONS, type Category } from "../constants/categories";
 import { CURRENCY_OPTIONS, type Currency } from "../constants/currencies";
 import { expenseSchema, type ExpenseInput } from "../expense-schema";
 import { COLORS } from "../../constants/colors";
+import {
+  controlStyles,
+  focusRing,
+  nativeSelectOptionStyles,
+  primaryButtonStyles,
+  secondaryButtonStyles,
+} from "../../constants/styles";
 import { formatDate } from "../../utils";
+import { CalendarIcon, CloseIcon } from "../../components/icons";
 
 export interface ExpenseFormProps {
   initialCategory?: Category;
@@ -30,7 +39,6 @@ export interface ExpenseFormProps {
   initialExpenseDate?: string;
   heading?: string;
   submitLabel?: string;
-  onCategoryChange?: (category: Category) => void;
   onSubmit?: (values: ExpenseInput) => void | Promise<void>;
   onCancel?: () => void;
 }
@@ -48,31 +56,29 @@ const labelProps = {
   color: COLORS.text,
 } as const;
 
-const fieldProps = {
+const amountGroupStyles = {
+  h: { base: "11", sm: "10" },
   bg: COLORS.raised,
+  borderWidth: "1px",
   borderColor: COLORS.border,
-  color: COLORS.text,
   rounded: "lg",
-  fontSize: "sm",
-  _placeholder: { color: "#64748B" },
-  _hover: { borderColor: "#2A3A52" },
-  _focusVisible: {
+  _hover: { borderColor: COLORS.borderStrong },
+  _focusWithin: {
     borderColor: COLORS.gold,
-    outlineColor: COLORS.gold,
-  },
-} as const;
-
-const selectOptionsStyles = {
-  "& option": {
-    backgroundColor: COLORS.card,
-    color: COLORS.text,
+    boxShadow: "0 0 0 1px rgba(242, 169, 0, 0.45)",
   },
 } as const;
 
 function RequiredMark() {
   return (
-    <Text as="span" ml="1" color={COLORS.red}>
-      *
+    <Text
+      as="span"
+      ml="1"
+      fontSize="xs"
+      fontWeight="normal"
+      color={COLORS.subtle}
+    >
+      Required
     </Text>
   );
 }
@@ -83,9 +89,8 @@ export function ExpenseForm({
   initialAmount,
   initialDescription,
   initialExpenseDate,
-  heading = "Add New Expense",
-  submitLabel = "Save Expense",
-  onCategoryChange,
+  heading = "Add expense",
+  submitLabel = "Save expense",
   onSubmit,
   onCancel,
 }: ExpenseFormProps) {
@@ -108,11 +113,6 @@ export function ExpenseForm({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [submitError, setSubmitError] = React.useState<string | null>(null);
   const submitGuard = React.useRef(false);
-
-  const handleCategoryChange = (value: Category) => {
-    setCategory(value);
-    onCategoryChange?.(value);
-  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -172,17 +172,7 @@ export function ExpenseForm({
   };
 
   return (
-    <Box
-      w="full"
-      maxW="25rem"
-      mx="auto"
-      bg={COLORS.card}
-      borderWidth="1px"
-      borderColor={COLORS.border}
-      rounded="2xl"
-      p={{ base: 5, md: 6 }}
-      shadow="2xl"
-    >
+    <Box w="full">
       <Flex align="center" justify="space-between" gap="3" mb="5">
         <Heading
           as="h2"
@@ -197,12 +187,13 @@ export function ExpenseForm({
           <IconButton
             type="button"
             aria-label="Close"
+            title="Close"
             size="sm"
             variant="ghost"
             flexShrink={0}
-            rounded="full"
             color={COLORS.muted}
             _hover={{ bg: COLORS.raised, color: COLORS.text }}
+            _focusVisible={focusRing}
             onClick={onCancel}
           >
             <CloseIcon />
@@ -216,21 +207,7 @@ export function ExpenseForm({
             Amount
             <RequiredMark />
           </Field.Label>
-          <Flex
-            align="center"
-            bg={COLORS.raised}
-            borderWidth="1px"
-            borderColor={COLORS.border}
-            rounded="lg"
-            h="11"
-            _hover={{ borderColor: "#2A3A52" }}
-            css={{
-              "&:focus-within": {
-                borderColor: COLORS.gold,
-                boxShadow: "0 0 0 1px rgba(242, 169, 0, 0.45)",
-              },
-            }}
-          >
+          <Flex align="center" {...amountGroupStyles}>
             <Input
               type="number"
               step="any"
@@ -244,7 +221,7 @@ export function ExpenseForm({
               placeholder="0.00"
               aria-label="Amount"
               aria-required="true"
-              _placeholder={{ color: "#64748B" }}
+              _placeholder={{ color: COLORS.subtle }}
               _focusVisible={{ outline: "none", boxShadow: "none" }}
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
@@ -278,7 +255,7 @@ export function ExpenseForm({
                 pe="7"
                 cursor="pointer"
                 _focusVisible={{ outline: "none", boxShadow: "none" }}
-                css={selectOptionsStyles}
+                css={nativeSelectOptionStyles}
               >
                 {CURRENCY_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -296,127 +273,133 @@ export function ExpenseForm({
           ) : null}
         </Field.Root>
 
-        <Field.Root gap="2" invalid={Boolean(errors.expenseDate)}>
-          <Field.Label {...labelProps}>
-            Date
-            <RequiredMark />
-          </Field.Label>
-          <Box position="relative" w="full">
-            <Input
-              {...fieldProps}
-              type="date"
-              w="full"
-              h="11"
-              aria-label="Date"
-              aria-required="true"
-              value={expenseDate}
-              onChange={(event) => setExpenseDate(event.target.value)}
-              onFocus={() => setIsDateFocused(true)}
-              onBlur={() => setIsDateFocused(false)}
-              color={isDateFocused ? COLORS.text : "transparent"}
-              css={{
-                colorScheme: "dark",
-                "&::-webkit-calendar-picker-indicator": {
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  opacity: 0,
-                  cursor: "pointer",
-                },
-              }}
-            />
-            {!isDateFocused ? (
-              <Text
+        <SimpleGrid columns={{ base: 1, sm: 2 }} gap="4">
+          <Field.Root gap="2" invalid={Boolean(errors.expenseDate)}>
+            <Field.Label {...labelProps}>
+              Date
+              <RequiredMark />
+            </Field.Label>
+            <Box position="relative" w="full">
+              <Input
+                {...controlStyles}
+                type="date"
+                w="full"
+                ps="3"
+                pe="10"
+                aria-label="Date"
+                aria-required="true"
+                value={expenseDate}
+                onChange={(event) => setExpenseDate(event.target.value)}
+                onFocus={() => setIsDateFocused(true)}
+                onBlur={() => setIsDateFocused(false)}
+                color={isDateFocused ? COLORS.text : "transparent"}
+                css={{
+                  colorScheme: "dark",
+                  "&::-webkit-calendar-picker-indicator": {
+                    position: "absolute",
+                    inset: 0,
+                    width: "100%",
+                    height: "100%",
+                    opacity: 0,
+                    cursor: "pointer",
+                  },
+                }}
+              />
+              {!isDateFocused ? (
+                <Text
+                  position="absolute"
+                  left="3"
+                  top="50%"
+                  transform="translateY(-50%)"
+                  fontSize="sm"
+                  color={expenseDate ? COLORS.text : COLORS.subtle}
+                  pointerEvents="none"
+                >
+                  {expenseDate ? formatDate(expenseDate) : "Select date"}
+                </Text>
+              ) : null}
+              <Box
                 position="absolute"
-                left="3"
+                right="3"
                 top="50%"
                 transform="translateY(-50%)"
-                fontSize="sm"
-                color={expenseDate ? COLORS.text : "#64748B"}
+                color={COLORS.muted}
                 pointerEvents="none"
+                aria-hidden="true"
               >
-                {expenseDate ? formatDate(expenseDate) : "Select date"}
-              </Text>
-            ) : null}
-            <Box
-              position="absolute"
-              right="3"
-              top="50%"
-              transform="translateY(-50%)"
-              color={COLORS.muted}
-              pointerEvents="none"
-              aria-hidden="true"
-            >
-              <CalendarIcon />
+                <CalendarIcon />
+              </Box>
             </Box>
-          </Box>
-          {errors.expenseDate ? (
-            <Field.ErrorText color={COLORS.red} fontSize="xs">
-              {errors.expenseDate}
-            </Field.ErrorText>
-          ) : null}
-        </Field.Root>
+            {errors.expenseDate ? (
+              <Field.ErrorText color={COLORS.red} fontSize="xs">
+                {errors.expenseDate}
+              </Field.ErrorText>
+            ) : null}
+          </Field.Root>
 
-        <Field.Root gap="2" invalid={Boolean(errors.category)}>
-          <Field.Label {...labelProps}>
-            Category
-            <RequiredMark />
-          </Field.Label>
-          <NativeSelect.Root size="md" w="full" variant="plain">
-            <NativeSelect.Field
-              aria-label="Category"
-              aria-required="true"
-              value={category ?? ""}
-              onChange={(event) => {
-                const value = event.target.value;
-                if (value) {
-                  handleCategoryChange(value as Category);
-                }
-              }}
-              h="11"
-              bg={COLORS.raised}
-              borderWidth="1px"
-              borderColor={COLORS.border}
-              rounded="lg"
-              color={category ? COLORS.text : "#64748B"}
-              fontSize="sm"
-              px="3"
-              pe="9"
-              cursor="pointer"
-              _hover={{ borderColor: "#2A3A52" }}
-              _focusVisible={{
-                borderColor: COLORS.gold,
-                outlineColor: COLORS.gold,
-              }}
-              css={selectOptionsStyles}
-            >
-              <option value="" disabled>
-                Select category
-              </option>
-              {CATEGORY_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+          <Field.Root gap="2" invalid={Boolean(errors.category)}>
+            <Field.Label {...labelProps}>
+              Category
+              <RequiredMark />
+            </Field.Label>
+            <NativeSelect.Root size="sm" w="full" variant="plain">
+              <NativeSelect.Field
+                aria-label="Category"
+                aria-required="true"
+                value={category ?? ""}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  if (value) {
+                    setCategory(value as Category);
+                  }
+                }}
+                {...controlStyles}
+                color={category ? COLORS.text : COLORS.subtle}
+                px="3"
+                pe="9"
+                cursor="pointer"
+                css={nativeSelectOptionStyles}
+              >
+                <option value="" disabled>
+                  Select category
                 </option>
-              ))}
-            </NativeSelect.Field>
-            <NativeSelect.Indicator color={COLORS.muted} />
-          </NativeSelect.Root>
-          {errors.category ? (
-            <Field.ErrorText color={COLORS.red} fontSize="xs">
-              {errors.category}
-            </Field.ErrorText>
-          ) : null}
-        </Field.Root>
+                {CATEGORY_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </NativeSelect.Field>
+              <NativeSelect.Indicator color={COLORS.muted} />
+            </NativeSelect.Root>
+            {errors.category ? (
+              <Field.ErrorText color={COLORS.red} fontSize="xs">
+                {errors.category}
+              </Field.ErrorText>
+            ) : null}
+          </Field.Root>
+        </SimpleGrid>
 
         <Field.Root gap="2" invalid={Boolean(errors.description)}>
-          <Field.Label {...labelProps}>Description</Field.Label>
+          <Field.Label {...labelProps}>
+            Description
+            <Text
+              as="span"
+              ml="1"
+              fontSize="xs"
+              fontWeight="normal"
+              color={COLORS.subtle}
+            >
+              Optional
+            </Text>
+          </Field.Label>
           <Textarea
-            {...fieldProps}
+            {...controlStyles}
+            h="auto"
             minH="22"
             p="3"
+            resize="none"
             aria-label="Description"
-            placeholder="Enter description..."
+            placeholder="Add a note (optional)"
             value={description}
             onChange={(event) => setDescription(event.target.value)}
           />
@@ -444,20 +427,8 @@ export function ExpenseForm({
             <Button
               type="button"
               flex="0 0 34%"
-              h="11"
-              variant="outline"
-              bg={COLORS.raised}
-              borderColor={COLORS.border}
-              color={COLORS.text}
-              fontSize="sm"
-              fontWeight="medium"
-              _hover={{ bg: "#1A2433", borderColor: "#2A3A52" }}
-              _focusVisible={{
-                outline: "2px solid",
-                outlineColor: COLORS.gold,
-                outlineOffset: "2px",
-              }}
               onClick={onCancel}
+              {...secondaryButtonStyles}
             >
               Cancel
             </Button>
@@ -465,63 +436,15 @@ export function ExpenseForm({
           <Button
             type="submit"
             flex="1"
-            h="11"
-            bg={COLORS.gold}
-            color="#11161F"
-            fontSize="sm"
-            fontWeight="semibold"
-            _hover={{ bg: "#FFC21A" }}
-            _active={{ bg: "#E09D00" }}
-            _focusVisible={{
-              outline: "2px solid",
-              outlineColor: COLORS.gold,
-              outlineOffset: "2px",
-            }}
             loading={isSubmitting}
             loadingText="Saving…"
             disabled={isSubmitting}
+            {...primaryButtonStyles}
           >
             {submitLabel}
           </Button>
         </HStack>
       </VStack>
     </Box>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <line x1="6" y1="6" x2="18" y2="18" />
-      <line x1="18" y1="6" x2="6" y2="18" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="3.5" y="5" width="17" height="15" rx="2.5" />
-      <path d="M8 3v4M16 3v4M3.5 9.5h17" />
-    </svg>
   );
 }

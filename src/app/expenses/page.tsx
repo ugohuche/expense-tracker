@@ -5,8 +5,8 @@ import { ExpensesHistory } from "./components/expenses-history";
 import { toLocalDateKey } from "./utils";
 
 export const metadata: Metadata = {
-  title: "Expenses History | Expense Tracker",
-  description: "Review, search, and filter your recorded expenses.",
+  title: "Expenses | Expense Tracker",
+  description: "Review, search, and filter expenses saved in this browser.",
 };
 
 export const instant = false;
