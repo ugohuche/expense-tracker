@@ -56,19 +56,30 @@ export default async function AuthStatus() {
           {session.user.name ?? session.user.email}
         </Text>
       </Text>
-      <form action={logout}>
+      <Flex gap={3} direction={{ base: "column", sm: "row" }}>
         <Button
-          type="submit"
+          asChild
           {...buttonStyles}
-          bg="white"
-          color="brand.navy"
-          borderWidth="1px"
-          borderColor="brand.mist"
-          _hover={{ bg: "brand.soft-white" }}
+          bg="brand.teal"
+          color="white"
+          _hover={{ bg: "brand.teal", opacity: 0.9 }}
         >
-          Sign out
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
-      </form>
+        <form action={logout}>
+          <Button
+            type="submit"
+            {...buttonStyles}
+            bg="white"
+            color="brand.navy"
+            borderWidth="1px"
+            borderColor="brand.mist"
+            _hover={{ bg: "brand.soft-white" }}
+          >
+            Sign out
+          </Button>
+        </form>
+      </Flex>
     </Flex>
   );
 }

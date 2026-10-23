@@ -1,165 +1,211 @@
-import { Suspense } from "react";
-import { Box, Flex, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
-
-import AuthStatus from "@/components/auth/auth-status";
-
-const features = [
-  {
-    title: "Quick to log",
-    description: "Add an expense in seconds and keep your record current.",
-    accent: "brand.teal",
-  },
-  {
-    title: "Clear overview",
-    description: "See totals and categories at a glance, so nothing slips by.",
-    accent: "brand.gold",
-  },
-  {
-    title: "Better habits",
-    description: "Understand where your money goes and plan with confidence.",
-    accent: "brand.green",
-  },
-];
-
-function StatusFallback() {
-  return (
-    <Flex gap={3} direction={{ base: "column", sm: "row" }}>
-      <Box
-        h={12}
-        w={{ base: "full", sm: "40" }}
-        borderRadius="full"
-        bg="white"
-        borderWidth="1px"
-        borderColor="brand.mist"
-      />
-      <Box
-        h={12}
-        w={{ base: "full", sm: "32" }}
-        borderRadius="full"
-        bg="white"
-        borderWidth="1px"
-        borderColor="brand.mist"
-      />
-    </Flex>
-  );
-}
-
 export default function Home() {
   return (
-    <Flex
-      as="main"
-      position="relative"
-      flex="1"
-      minH="100dvh"
-      overflow="hidden"
-      bg="brand.soft-white"
-    >
-      <Box
-        position="absolute"
-        top="-140px"
-        right="-100px"
-        boxSize="360px"
-        borderRadius="full"
-        bg="brand.teal"
-        opacity={0.12}
-        filter="blur(90px)"
-      />
-      <Box
-        position="absolute"
-        bottom="-160px"
-        left="-120px"
-        boxSize="380px"
-        borderRadius="full"
-        bg="brand.gold"
-        opacity={0.14}
-        filter="blur(100px)"
-      />
+    <main className="min-h-screen bg-[#F7F9FB] p-6">
+      <div className="mb-8 rounded-2xl bg-[#0B2545] p-8 text-white shadow-xl">
+        <h1 className="text-4xl font-bold">Expense Tracker Dashboard</h1>
 
-      <Flex
-        position="relative"
-        direction="column"
-        align="center"
-        justify="center"
-        gap={{ base: 10, sm: 14 }}
-        w="full"
-        px={6}
-        py={{ base: 12, sm: 20 }}
-      >
-        <Stack align="center" gap={6} textAlign="center" maxW="2xl">
-          <Flex
-            align="center"
-            gap={2}
-            bg="white"
-            borderWidth="1px"
-            borderColor="brand.mist"
-            borderRadius="full"
-            px={4}
-            py={1.5}
-            boxShadow="sm"
-          >
-            <Box boxSize="2" borderRadius="full" bg="brand.teal" />
-            <Text fontSize="sm" fontWeight="medium" color="brand.navy">
-              Expense Tracker
-            </Text>
-          </Flex>
+        <p className="mt-2 text-slate-300">
+          Track spending, monitor budgets, and manage your finances.
+        </p>
+      </div>
 
-          <Heading
-            as="h1"
-            color="brand.navy"
-            fontSize={{ base: "4xl", sm: "5xl" }}
-            fontWeight="bold"
-            letterSpacing="tight"
-            lineHeight="1.1"
-          >
-            Know where your money goes
-          </Heading>
+      <div className="grid gap-6 md:grid-cols-4">
+        <div className="rounded-xl bg-white p-6 shadow-lg">
+          <h2 className="text-sm text-gray-500">Total Expenses</h2>
 
-          <Text
-            color="brand.slate"
-            fontSize={{ base: "md", sm: "lg" }}
-            lineHeight="1.7"
-            maxW="xl"
-          >
-            Record your spending in seconds and see friendly, clear summaries —
-            so you can plan with confidence.
-          </Text>
+          <p className="mt-2 text-3xl font-bold text-[#E4572E]">R8,500</p>
+        </div>
 
-          <Suspense fallback={<StatusFallback />}>
-            <AuthStatus />
-          </Suspense>
-        </Stack>
+        <div className="rounded-xl bg-white p-6 shadow-lg">
+          <h2 className="text-sm text-gray-500">Monthly Budget</h2>
 
-        <SimpleGrid columns={{ base: 1, sm: 3 }} gap={5} w="full" maxW="4xl">
-          {features.map((feature) => (
-            <Box
-              key={feature.title}
-              bg="white"
-              borderWidth="1px"
-              borderColor="brand.mist"
-              borderRadius="2xl"
-              boxShadow="sm"
-              p={6}
-            >
-              <Flex
-                align="center"
-                justify="center"
-                boxSize="11"
-                mb={4}
-                borderRadius="xl"
-                bg={`${feature.accent}/12`}
-              >
-                <Box boxSize="2.5" borderRadius="full" bg={feature.accent} />
-              </Flex>
-              <Heading as="h2" size="md" mb={2} color="brand.navy">
-                {feature.title}
-              </Heading>
-              <Text color="brand.slate" fontSize="sm" lineHeight="1.6">
-                {feature.description}
-              </Text>
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Flex>
-    </Flex>
+          <p className="mt-2 text-3xl font-bold text-[#0E8388]">R10,000</p>
+        </div>
+
+        <div className="rounded-xl bg-white p-6 shadow-lg">
+          <h2 className="text-sm text-gray-500">Budget Left</h2>
+
+          <p className="mt-2 text-3xl font-bold text-[#1B9E5A]">R1,500</p>
+        </div>
+
+        <div className="rounded-xl bg-white p-6 shadow-lg">
+          <h2 className="text-sm text-gray-500">Savings</h2>
+
+          <p className="mt-2 text-3xl font-bold text-[#F2A900]">R3,200</p>
+        </div>
+      </div>
+      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
+        <h2 className="text-2xl font-bold text-[#0B2545]">
+          Monthly Spending Trend
+        </h2>
+
+        <p className="mt-2 text-gray-500">
+          Overview of expenses throughout the month
+        </p>
+
+        <div className="mt-6 h-80 rounded-xl bg-[#F8FAFC] p-6">
+          <div className="flex h-full items-end justify-between gap-4">
+            <div className="flex flex-col items-center">
+              <div className="h-24 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">Jan</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="h-40 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">Feb</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="h-28 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">Mar</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="h-52 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">Apr</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="h-44 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">May</p>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div className="h-64 w-12 rounded-t bg-[#0E8388]"></div>
+              <p className="mt-2 text-sm">Jun</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <div className="rounded-2xl bg-white p-6 shadow-lg">
+          <h2 className="text-2xl font-bold text-[#0B2545]">
+            Spending Categories
+          </h2>
+
+          <div className="mt-4 space-y-4">
+            <div>
+              <div className="flex justify-between">
+                <span>Food</span>
+                <span>35%</span>
+              </div>
+
+              <div className="mt-1 h-3 rounded-full bg-gray-200">
+                <div className="h-3 w-[35%] rounded-full bg-[#E4572E]"></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <span>Transport</span>
+                <span>20%</span>
+              </div>
+
+              <div className="mt-1 h-3 rounded-full bg-gray-200">
+                <div className="h-3 w-[20%] rounded-full bg-[#0E8388]"></div>
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between">
+                <span>Entertainment</span>
+                <span>15%</span>
+              </div>
+
+              <div className="mt-1 h-3 rounded-full bg-gray-200">
+                <div className="h-3 w-[15%] rounded-full bg-[#F2A900]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl bg-white p-6 shadow-lg">
+          <h2 className="text-2xl font-bold text-[#0B2545]">Budget Progress</h2>
+
+          <div className="mt-6">
+            <p className="mb-2 text-gray-600">R8,500 of R10,000 used</p>
+
+            <div className="h-6 rounded-full bg-gray-200">
+              <div className="h-6 w-[85%] rounded-full bg-[#1B9E5A]"></div>
+            </div>
+
+            <p className="mt-3 text-sm text-gray-500">
+              85% of monthly budget used
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
+        <h2 className="text-2xl font-bold text-[#0B2545]">
+          Recent Transactions
+        </h2>
+
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center justify-between border-b pb-3">
+            <div>
+              <p className="font-medium">Uber</p>
+              <p className="text-sm text-gray-500">Transport</p>
+            </div>
+
+            <p className="font-bold text-[#E4572E]">-R120</p>
+          </div>
+
+          <div className="flex items-center justify-between border-b pb-3">
+            <div>
+              <p className="font-medium">Checkers</p>
+              <p className="text-sm text-gray-500">Groceries</p>
+            </div>
+
+            <p className="font-bold text-[#E4572E]">-R450</p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Salary</p>
+              <p className="text-sm text-gray-500">Income</p>
+            </div>
+
+            <p className="font-bold text-[#1B9E5A]">+R5000</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
+        <h2 className="text-2xl font-bold text-[#0B2545]">
+          Recent Transactions
+        </h2>
+
+        <div className="mt-6 space-y-4">
+          <div className="flex items-center justify-between border-b pb-3">
+            <div>
+              <p className="font-medium">Uber</p>
+              <p className="text-sm text-gray-500">Transport</p>
+            </div>
+
+            <p className="font-bold text-[#E4572E]">-R120</p>
+          </div>
+
+          <div className="flex items-center justify-between border-b pb-3">
+            <div>
+              <p className="font-medium">Checkers</p>
+              <p className="text-sm text-gray-500">Groceries</p>
+            </div>
+
+            <p className="font-bold text-[#E4572E]">-R450</p>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium">Salary</p>
+              <p className="text-sm text-gray-500">Income</p>
+            </div>
+
+            <p className="font-bold text-[#1B9E5A]">+R5000</p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
