@@ -1,4 +1,4 @@
-const DEFAULT_CURRENCY = "USD";
+import { DEFAULT_CURRENCY } from "@/lib/currency";
 
 const monthFormatter = new Intl.DateTimeFormat("en-US", {
   month: "long",
