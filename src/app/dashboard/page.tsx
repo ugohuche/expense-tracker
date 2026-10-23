@@ -1,211 +1,294 @@
+"use client";
+
+import {
+  Box,
+  Flex,
+  Grid,
+  Heading,
+  Progress,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+
+const monthlySpending = [
+  { month: "Jan", height: 24 },
+  { month: "Feb", height: 40 },
+  { month: "Mar", height: 28 },
+  { month: "Apr", height: 52 },
+  { month: "May", height: 44 },
+  { month: "Jun", height: 64 },
+];
+
+const categories = [
+  { name: "Food", value: 35, color: "#E4572E" },
+  { name: "Transport", value: 20, color: "#0E8388" },
+  { name: "Entertainment", value: 15, color: "#F2A900" },
+];
+
+const transactions = [
+  {
+    name: "Uber",
+    category: "Transport",
+    amount: "-R120",
+    color: "#E4572E",
+  },
+  {
+    name: "Checkers",
+    category: "Groceries",
+    amount: "-R450",
+    color: "#E4572E",
+  },
+  {
+    name: "Salary",
+    category: "Income",
+    amount: "+R5000",
+    color: "#1B9E5A",
+  },
+];
+
+function StatCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
+  return (
+    <Box
+      bg="white"
+      p="6"
+      borderRadius="xl"
+      shadow="md"
+      border="1px solid"
+      borderColor="gray.100"
+    >
+      <Text fontSize="sm" color="gray.500">
+        {label}
+      </Text>
+
+      <Text mt="2" fontSize="3xl" fontWeight="bold" color={color}>
+        {value}
+      </Text>
+    </Box>
+  );
+}
+
 export default function Dashboard() {
   return (
-    <main className="min-h-screen bg-[#F7F9FB] p-6">
-      <div className="mb-8 rounded-2xl bg-[#0B2545] p-8 text-white shadow-xl">
-        <h1 className="text-4xl font-bold">Expense Tracker Dashboard</h1>
+    <Box minH="100vh" bg="#F7F9FB" p={{ base: 4, md: 6 }}>
+      {/* Header */}
+      <Box
+        mb="8"
+        bg="#0B2545"
+        color="white"
+        p={{ base: 6, md: 8 }}
+        borderRadius="2xl"
+        shadow="lg"
+      >
+        <Heading size="2xl">Expense Tracker Dashboard</Heading>
 
-        <p className="mt-2 text-slate-300">
+        <Text mt="2" color="gray.300">
           Track spending, monitor budgets, and manage your finances.
-        </p>
-      </div>
+        </Text>
+      </Box>
 
-      <div className="grid gap-6 md:grid-cols-4">
-        <div className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="text-sm text-gray-500">Total Expenses</h2>
+      {/* Summary Cards */}
+      <Grid
+        templateColumns={{
+          base: "1fr",
+          sm: "repeat(2, 1fr)",
+          lg: "repeat(4, 1fr)",
+        }}
+        gap="6"
+      >
+        <StatCard label="Total Expenses" value="R8,500" color="#E4572E" />
 
-          <p className="mt-2 text-3xl font-bold text-[#E4572E]">R8,500</p>
-        </div>
+        <StatCard label="Monthly Budget" value="R10,000" color="#0E8388" />
 
-        <div className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="text-sm text-gray-500">Monthly Budget</h2>
+        <StatCard label="Budget Left" value="R1,500" color="#1B9E5A" />
 
-          <p className="mt-2 text-3xl font-bold text-[#0E8388]">R10,000</p>
-        </div>
+        <StatCard label="Savings" value="R3,200" color="#F2A900" />
+      </Grid>
 
-        <div className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="text-sm text-gray-500">Budget Left</h2>
-
-          <p className="mt-2 text-3xl font-bold text-[#1B9E5A]">R1,500</p>
-        </div>
-
-        <div className="rounded-xl bg-white p-6 shadow-lg">
-          <h2 className="text-sm text-gray-500">Savings</h2>
-
-          <p className="mt-2 text-3xl font-bold text-[#F2A900]">R3,200</p>
-        </div>
-      </div>
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-[#0B2545]">
+      {/* Monthly Spending */}
+      <Box
+        mt="8"
+        bg="white"
+        p="6"
+        borderRadius="2xl"
+        shadow="md"
+        border="1px solid"
+        borderColor="gray.100"
+      >
+        <Heading size="lg" color="#0B2545">
           Monthly Spending Trend
-        </h2>
+        </Heading>
 
-        <p className="mt-2 text-gray-500">
+        <Text mt="2" color="gray.500">
           Overview of expenses throughout the month
-        </p>
+        </Text>
 
-        <div className="mt-6 h-80 rounded-xl bg-[#F8FAFC] p-6">
-          <div className="flex h-full items-end justify-between gap-4">
-            <div className="flex flex-col items-center">
-              <div className="h-24 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">Jan</p>
-            </div>
+        <Box mt="6" h="320px" bg="#F8FAFC" p="6" borderRadius="xl">
+          <Flex h="full" align="end" justify="space-between" gap="4">
+            {monthlySpending.map((item) => (
+              <Flex
+                key={item.month}
+                direction="column"
+                align="center"
+                justify="end"
+                h="full"
+                flex="1"
+              >
+                <Box
+                  h={`${item.height * 4}px`}
+                  maxH="260px"
+                  w={{ base: "28px", md: "48px" }}
+                  bg="#0E8388"
+                  borderTopRadius="md"
+                  transition="0.2s"
+                  _hover={{
+                    bg: "#08676B",
+                    transform: "translateY(-4px)",
+                  }}
+                />
 
-            <div className="flex flex-col items-center">
-              <div className="h-40 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">Feb</p>
-            </div>
+                <Text mt="2" fontSize="sm" color="gray.600">
+                  {item.month}
+                </Text>
+              </Flex>
+            ))}
+          </Flex>
+        </Box>
+      </Box>
 
-            <div className="flex flex-col items-center">
-              <div className="h-28 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">Mar</p>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="h-52 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">Apr</p>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="h-44 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">May</p>
-            </div>
-
-            <div className="flex flex-col items-center">
-              <div className="h-64 w-12 rounded-t bg-[#0E8388]"></div>
-              <p className="mt-2 text-sm">Jun</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl bg-white p-6 shadow-lg">
-          <h2 className="text-2xl font-bold text-[#0B2545]">
+      {/* Categories and Budget */}
+      <Grid
+        mt="8"
+        templateColumns={{
+          base: "1fr",
+          lg: "repeat(2, 1fr)",
+        }}
+        gap="6"
+      >
+        {/* Spending Categories */}
+        <Box
+          bg="white"
+          p="6"
+          borderRadius="2xl"
+          shadow="md"
+          border="1px solid"
+          borderColor="gray.100"
+        >
+          <Heading size="lg" color="#0B2545">
             Spending Categories
-          </h2>
+          </Heading>
 
-          <div className="mt-4 space-y-4">
-            <div>
-              <div className="flex justify-between">
-                <span>Food</span>
-                <span>35%</span>
-              </div>
+          <Stack gap="5" mt="6">
+            {categories.map((category) => (
+              <Box key={category.name}>
+                <Flex justify="space-between" mb="2">
+                  <Text fontWeight="medium">{category.name}</Text>
 
-              <div className="mt-1 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[35%] rounded-full bg-[#E4572E]"></div>
-              </div>
-            </div>
+                  <Text color="gray.500">{category.value}%</Text>
+                </Flex>
 
-            <div>
-              <div className="flex justify-between">
-                <span>Transport</span>
-                <span>20%</span>
-              </div>
+                <Box h="3" bg="gray.200" borderRadius="full" overflow="hidden">
+                  <Box
+                    h="full"
+                    width={`${category.value}%`}
+                    bg={category.color}
+                    borderRadius="full"
+                  />
+                </Box>
+              </Box>
+            ))}
+          </Stack>
+        </Box>
 
-              <div className="mt-1 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[20%] rounded-full bg-[#0E8388]"></div>
-              </div>
-            </div>
+        {/* Budget Progress */}
+        <Box
+          bg="white"
+          p="6"
+          borderRadius="2xl"
+          shadow="md"
+          border="1px solid"
+          borderColor="gray.100"
+        >
+          <Heading size="lg" color="#0B2545">
+            Budget Progress
+          </Heading>
 
-            <div>
-              <div className="flex justify-between">
-                <span>Entertainment</span>
-                <span>15%</span>
-              </div>
+          <Box mt="8">
+            <Flex justify="space-between" mb="3">
+              <Text color="gray.600">R8,500 of R10,000 used</Text>
 
-              <div className="mt-1 h-3 rounded-full bg-gray-200">
-                <div className="h-3 w-[15%] rounded-full bg-[#F2A900]"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+              <Text fontWeight="bold" color="#1B9E5A">
+                85%
+              </Text>
+            </Flex>
 
-        <div className="rounded-2xl bg-white p-6 shadow-lg">
-          <h2 className="text-2xl font-bold text-[#0B2545]">Budget Progress</h2>
+            <Progress.Root value={85} colorPalette="green" size="lg">
+              <Progress.Track>
+                <Progress.Range />
+              </Progress.Track>
+            </Progress.Root>
 
-          <div className="mt-6">
-            <p className="mb-2 text-gray-600">R8,500 of R10,000 used</p>
-
-            <div className="h-6 rounded-full bg-gray-200">
-              <div className="h-6 w-[85%] rounded-full bg-[#1B9E5A]"></div>
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
+            <Text mt="4" fontSize="sm" color="gray.500">
               85% of monthly budget used
-            </p>
-          </div>
-        </div>
-      </div>
+            </Text>
+          </Box>
+        </Box>
+      </Grid>
 
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-[#0B2545]">
-          Recent Transactions
-        </h2>
+      {/* Recent Transactions */}
+      <Box
+        mt="8"
+        bg="white"
+        p="6"
+        borderRadius="2xl"
+        shadow="md"
+        border="1px solid"
+        borderColor="gray.100"
+      >
+        <Flex justify="space-between" align="center" mb="6">
+          <Heading size="lg" color="#0B2545">
+            Recent Transactions
+          </Heading>
 
-        <div className="mt-6 space-y-4">
-          <div className="flex items-center justify-between border-b pb-3">
-            <div>
-              <p className="font-medium">Uber</p>
-              <p className="text-sm text-gray-500">Transport</p>
-            </div>
+          <Text fontSize="sm" color="#0E8388" fontWeight="semibold">
+            Latest activity
+          </Text>
+        </Flex>
 
-            <p className="font-bold text-[#E4572E]">-R120</p>
-          </div>
+        <Stack gap="0">
+          {transactions.map((transaction, index) => (
+            <Flex
+              key={transaction.name}
+              align="center"
+              justify="space-between"
+              py="4"
+              borderBottom={
+                index !== transactions.length - 1 ? "1px solid" : "none"
+              }
+              borderColor="gray.100"
+            >
+              <Box>
+                <Text fontWeight="semibold">{transaction.name}</Text>
 
-          <div className="flex items-center justify-between border-b pb-3">
-            <div>
-              <p className="font-medium">Checkers</p>
-              <p className="text-sm text-gray-500">Groceries</p>
-            </div>
+                <Text fontSize="sm" color="gray.500">
+                  {transaction.category}
+                </Text>
+              </Box>
 
-            <p className="font-bold text-[#E4572E]">-R450</p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Salary</p>
-              <p className="text-sm text-gray-500">Income</p>
-            </div>
-
-            <p className="font-bold text-[#1B9E5A]">+R5000</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-[#0B2545]">
-          Recent Transactions
-        </h2>
-
-        <div className="mt-6 space-y-4">
-          <div className="flex items-center justify-between border-b pb-3">
-            <div>
-              <p className="font-medium">Uber</p>
-              <p className="text-sm text-gray-500">Transport</p>
-            </div>
-
-            <p className="font-bold text-[#E4572E]">-R120</p>
-          </div>
-
-          <div className="flex items-center justify-between border-b pb-3">
-            <div>
-              <p className="font-medium">Checkers</p>
-              <p className="text-sm text-gray-500">Groceries</p>
-            </div>
-
-            <p className="font-bold text-[#E4572E]">-R450</p>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Salary</p>
-              <p className="text-sm text-gray-500">Income</p>
-            </div>
-
-            <p className="font-bold text-[#1B9E5A]">+R5000</p>
-          </div>
-        </div>
-      </div>
-    </main>
+              <Text fontWeight="bold" color={transaction.color}>
+                {transaction.amount}
+              </Text>
+            </Flex>
+          ))}
+        </Stack>
+      </Box>
+    </Box>
   );
 }
