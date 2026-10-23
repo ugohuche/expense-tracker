@@ -78,7 +78,7 @@ export default async function DashboardLayout({
                 <Link href="/dashboard">Dashboard</Link>
               </ChakraLink>
               <ChakraLink asChild {...navLinkStyles}>
-                <Link href="/expense-form">Add expense</Link>
+                <Link href="/expenses/new">Add expense</Link>
               </ChakraLink>
             </Flex>
           </Flex>

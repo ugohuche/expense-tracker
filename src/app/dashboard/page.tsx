@@ -50,7 +50,7 @@ export default async function DashboardPage() {
           fontWeight="medium"
           _hover={{ bg: "brand.teal", opacity: 0.9 }}
         >
-          <Link href="/expense-form">Add expense</Link>
+          <Link href="/expenses/new">Add expense</Link>
         </Button>
       </Flex>
 
