@@ -2,7 +2,7 @@ import { COLORS } from "./colors";
 
 export const focusRing = {
   outline: "2px solid",
-  outlineColor: COLORS.gold,
+  outlineColor: COLORS.focus,
   outlineOffset: "2px",
 } as const;
 
@@ -11,28 +11,29 @@ export const surfaceStyles = {
   borderWidth: "1px",
   borderColor: COLORS.border,
   borderRadius: "xl",
+  boxShadow: "sm",
 } as const;
 
 export const dialogSurfaceStyles = {
   ...surfaceStyles,
   p: { base: 5, md: 6 },
-  shadow: "lg",
+  boxShadow: "lg",
   outline: "none",
 } as const;
 
 export const controlStyles = {
   h: { base: "11", sm: "10" },
-  bg: COLORS.raised,
+  bg: COLORS.card,
   borderWidth: "1px",
   borderColor: COLORS.border,
   borderRadius: "lg",
   color: COLORS.text,
   fontSize: "sm",
-  _placeholder: { color: COLORS.subtle },
+  focusRingColor: COLORS.focus,
+  _placeholder: { color: COLORS.muted },
   _hover: { borderColor: COLORS.borderStrong },
   _focusVisible: {
-    borderColor: COLORS.gold,
-    outlineColor: COLORS.gold,
+    borderColor: COLORS.focus,
   },
 } as const;
 
@@ -47,12 +48,12 @@ export const primaryButtonStyles = {
   h: { base: "11", sm: "10" },
   px: 4,
   borderRadius: "lg",
-  bg: COLORS.gold,
-  color: COLORS.onAccent,
+  bg: COLORS.primary,
+  color: COLORS.onPrimary,
   fontSize: "sm",
   fontWeight: "semibold",
-  _hover: { bg: COLORS.goldHover },
-  _active: { bg: COLORS.goldActive },
+  _hover: { bg: COLORS.primaryHover },
+  _active: { bg: COLORS.primaryActive },
   _focusVisible: focusRing,
   _disabled: { opacity: 0.6, cursor: "not-allowed" },
 } as const;
@@ -61,13 +62,13 @@ export const secondaryButtonStyles = {
   h: { base: "11", sm: "10" },
   px: 4,
   variant: "outline",
-  bg: COLORS.raised,
+  bg: COLORS.card,
   borderColor: COLORS.border,
   borderRadius: "lg",
   color: COLORS.text,
   fontSize: "sm",
   fontWeight: "medium",
-  _hover: { bg: COLORS.raisedHover, borderColor: COLORS.borderStrong },
+  _hover: { bg: COLORS.raised },
   _active: { bg: COLORS.raised },
   _focusVisible: focusRing,
 } as const;
@@ -75,13 +76,15 @@ export const secondaryButtonStyles = {
 export const dangerButtonStyles = {
   h: { base: "11", sm: "10" },
   px: 4,
+  variant: "outline",
+  bg: COLORS.dangerSurface,
+  borderColor: COLORS.dangerBorder,
   borderRadius: "lg",
-  bg: COLORS.red,
-  color: COLORS.onDanger,
+  color: COLORS.text,
   fontSize: "sm",
   fontWeight: "semibold",
-  _hover: { bg: COLORS.redHover },
-  _active: { bg: COLORS.redActive },
+  _hover: { bg: COLORS.dangerSurfaceHover, borderColor: COLORS.danger },
+  _active: { bg: COLORS.dangerSurfaceActive },
   _focusVisible: focusRing,
 } as const;
 
@@ -89,15 +92,34 @@ export const dangerOutlineButtonStyles = {
   h: { base: "11", sm: "10" },
   px: 4,
   variant: "outline",
-  bg: COLORS.dangerSurface,
+  bg: COLORS.card,
   borderColor: COLORS.dangerBorder,
   borderRadius: "lg",
-  color: COLORS.red,
+  color: COLORS.text,
   fontSize: "sm",
   fontWeight: "semibold",
-  _hover: { bg: COLORS.dangerSurfaceHover },
+  _hover: { bg: COLORS.dangerSurface, borderColor: COLORS.danger },
   _active: { bg: COLORS.dangerSurfaceActive },
   _focusVisible: focusRing,
+} as const;
+
+export const errorTextStyles = {
+  color: COLORS.text,
+  borderLeftWidth: "2px",
+  borderColor: COLORS.danger,
+  ps: 2,
+  fontSize: "xs",
+} as const;
+
+export const successTextStyles = {
+  color: COLORS.text,
+  bg: COLORS.successSurface,
+  borderWidth: "1px",
+  borderColor: COLORS.successBorder,
+  borderRadius: "md",
+  px: 3,
+  py: 2,
+  fontSize: "sm",
 } as const;
 
 export const metaLabelStyles = {
@@ -111,6 +133,5 @@ export const metaLabelStyles = {
 export const tableHeaderStyles = {
   ...metaLabelStyles,
   fontSize: "11px",
-  bg: COLORS.raised,
   py: 3,
 } as const;

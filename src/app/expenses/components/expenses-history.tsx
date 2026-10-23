@@ -12,16 +12,16 @@ import {
 } from "@chakra-ui/react";
 
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
+import { COLORS } from "@/components/expense/colors";
+import { DeleteExpenseDialog } from "@/components/expense/delete-expense-dialog";
+import { ExpenseDetailsDialog } from "@/components/expense/expense-details-dialog";
+import { ExpenseDialog } from "@/components/expense/expense-dialog";
+import { ExpensesTable } from "@/components/expense/expenses-table";
+import { ExpensesToolbar } from "@/components/expense/expenses-toolbar";
+import { PlusIcon } from "@/components/expense/icons";
+import { focusRing, primaryButtonStyles } from "@/components/expense/styles";
+import { SummaryOverview } from "@/components/expense/summary-overview";
 
-import { DeleteExpenseDialog } from "./delete-expense-dialog";
-import { ExpenseDetailsDialog } from "./expense-details-dialog";
-import { ExpenseDialog } from "./expense-dialog";
-import { ExpensesTable } from "./expenses-table";
-import { ExpensesToolbar } from "./expenses-toolbar";
-import { PlusIcon } from "./icons";
-import { SummaryOverview } from "./summary-overview";
-import { COLORS } from "../constants/colors";
-import { focusRing, primaryButtonStyles } from "../constants/styles";
 import { loadStoredExpenses, saveStoredExpenses } from "../storage";
 import type { ExpenseFilters, ExpenseRecord } from "../types";
 import {
@@ -262,12 +262,13 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
               justify="space-between"
               direction={{ base: "column", sm: "row" }}
               gap={2}
-              bg={COLORS.raised}
+              bg={COLORS.card}
               borderWidth="1px"
               borderColor={COLORS.border}
               borderLeftWidth="3px"
-              borderLeftColor={COLORS.gold}
+              borderLeftColor={COLORS.success}
               borderRadius="lg"
+              boxShadow="sm"
               px={4}
               py={3}
             >
@@ -277,8 +278,8 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
               <Button
                 size="xs"
                 variant="ghost"
-                color={COLORS.gold}
-                _hover={{ bg: COLORS.goldSurface }}
+                color={COLORS.text}
+                _hover={{ bg: COLORS.primarySurface }}
                 _focusVisible={focusRing}
                 onClick={() => setNotice(null)}
               >

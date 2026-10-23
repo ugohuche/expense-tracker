@@ -1,8 +1,8 @@
 import { Box } from "@chakra-ui/react";
 
-import { COLORS } from "../constants/colors";
-import { surfaceStyles } from "../constants/styles";
-import { ExpenseForm } from "./components/expense-form";
+import { COLORS } from "@/components/expense/colors";
+import { ExpenseForm } from "@/components/expense/expense-form";
+import { surfaceStyles } from "@/components/expense/styles";
 
 export default function ExpenseFormPage() {
   return (

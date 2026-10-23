@@ -2,13 +2,13 @@
 
 import { Dialog } from "@chakra-ui/react";
 
-import { ExpenseForm } from "@/app/expenses/expense-form/components/expense-form";
 import type { Currency } from "@/app/expenses/expense-form/constants/currencies";
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
+import type { ExpenseRecord } from "@/app/expenses/types";
 
-import { COLORS } from "../constants/colors";
-import { dialogSurfaceStyles } from "../constants/styles";
-import type { ExpenseRecord } from "../types";
+import { COLORS } from "./colors";
+import { ExpenseForm } from "./expense-form";
+import { dialogSurfaceStyles } from "./styles";
 
 interface ExpenseDialogProps {
   open: boolean;

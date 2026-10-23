@@ -1,13 +1,14 @@
 import { Box, SimpleGrid, Text } from "@chakra-ui/react";
 
-import { COLORS } from "../constants/colors";
-import { metaLabelStyles, surfaceStyles } from "../constants/styles";
-import type { CurrencyTotal, ExpenseSummary } from "../types";
+import type { CurrencyTotal, ExpenseSummary } from "@/app/expenses/types";
 import {
   formatCurrency,
   formatPercentChange,
   getCategoryOption,
-} from "../utils";
+} from "@/app/expenses/utils";
+
+import { COLORS } from "./colors";
+import { metaLabelStyles, surfaceStyles } from "./styles";
 
 interface SummaryOverviewProps {
   summary: ExpenseSummary;
@@ -19,6 +20,7 @@ interface SummaryMetric {
   caption: string;
   valueColor?: string;
   emphasis?: boolean;
+  comparison?: boolean;
 }
 
 function formatOtherTotals(totals: CurrencyTotal[]): string {
@@ -107,10 +109,11 @@ export function SummaryOverview({ summary }: SummaryOverviewProps) {
         change === null
           ? COLORS.muted
           : change > 0
-            ? COLORS.red
+            ? COLORS.danger
             : change < 0
-              ? COLORS.green
+              ? COLORS.success
               : COLORS.muted,
+      comparison: true,
     },
     {
       label: "Year to date",
@@ -146,9 +149,11 @@ export function SummaryOverview({ summary }: SummaryOverviewProps) {
               fontSize={
                 metric.emphasis
                   ? { base: "xl", sm: "2xl", md: "3xl" }
-                  : { base: "lg", sm: "xl", md: "2xl" }
+                  : metric.comparison
+                    ? { base: "xl", sm: "2xl", md: "2xl" }
+                    : { base: "lg", sm: "xl", md: "2xl" }
               }
-              fontWeight="semibold"
+              fontWeight={metric.comparison ? "bold" : "semibold"}
               lineHeight="1.2"
               letterSpacing="tight"
               color={metric.valueColor ?? COLORS.text}

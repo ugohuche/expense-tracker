@@ -17,19 +17,31 @@ import {
   VStack,
 } from "@chakra-ui/react";
 
-import { CATEGORY_OPTIONS, type Category } from "../constants/categories";
-import { CURRENCY_OPTIONS, type Currency } from "../constants/currencies";
-import { expenseSchema, type ExpenseInput } from "../expense-schema";
-import { COLORS } from "../../constants/colors";
+import {
+  CATEGORY_OPTIONS,
+  type Category,
+} from "@/app/expenses/expense-form/constants/categories";
+import {
+  CURRENCY_OPTIONS,
+  type Currency,
+} from "@/app/expenses/expense-form/constants/currencies";
+import {
+  expenseSchema,
+  type ExpenseInput,
+} from "@/app/expenses/expense-form/expense-schema";
+import { formatDate } from "@/app/expenses/utils";
+
+import { COLORS } from "./colors";
+import { CalendarIcon, CloseIcon } from "./icons";
 import {
   controlStyles,
+  errorTextStyles,
   focusRing,
   nativeSelectOptionStyles,
   primaryButtonStyles,
   secondaryButtonStyles,
-} from "../../constants/styles";
-import { formatDate } from "../../utils";
-import { CalendarIcon, CloseIcon } from "../../components/icons";
+  successTextStyles,
+} from "./styles";
 
 export interface ExpenseFormProps {
   initialCategory?: Category;
@@ -58,14 +70,14 @@ const labelProps = {
 
 const amountGroupStyles = {
   h: { base: "11", sm: "10" },
-  bg: COLORS.raised,
+  bg: COLORS.card,
   borderWidth: "1px",
   borderColor: COLORS.border,
   rounded: "lg",
   _hover: { borderColor: COLORS.borderStrong },
   _focusWithin: {
-    borderColor: COLORS.gold,
-    boxShadow: "0 0 0 1px rgba(242, 169, 0, 0.45)",
+    borderColor: COLORS.focus,
+    ...focusRing,
   },
 } as const;
 
@@ -267,7 +279,7 @@ export function ExpenseForm({
             </NativeSelect.Root>
           </Flex>
           {errors.amount || errors.currency ? (
-            <Field.ErrorText color={COLORS.red} fontSize="xs">
+            <Field.ErrorText {...errorTextStyles}>
               {errors.amount ?? errors.currency}
             </Field.ErrorText>
           ) : null}
@@ -294,7 +306,7 @@ export function ExpenseForm({
                 onBlur={() => setIsDateFocused(false)}
                 color={isDateFocused ? COLORS.text : "transparent"}
                 css={{
-                  colorScheme: "dark",
+                  colorScheme: "light",
                   "&::-webkit-calendar-picker-indicator": {
                     position: "absolute",
                     inset: 0,
@@ -331,7 +343,7 @@ export function ExpenseForm({
               </Box>
             </Box>
             {errors.expenseDate ? (
-              <Field.ErrorText color={COLORS.red} fontSize="xs">
+              <Field.ErrorText {...errorTextStyles}>
                 {errors.expenseDate}
               </Field.ErrorText>
             ) : null}
@@ -372,7 +384,7 @@ export function ExpenseForm({
               <NativeSelect.Indicator color={COLORS.muted} />
             </NativeSelect.Root>
             {errors.category ? (
-              <Field.ErrorText color={COLORS.red} fontSize="xs">
+              <Field.ErrorText {...errorTextStyles}>
                 {errors.category}
               </Field.ErrorText>
             ) : null}
@@ -404,20 +416,20 @@ export function ExpenseForm({
             onChange={(event) => setDescription(event.target.value)}
           />
           {errors.description ? (
-            <Field.ErrorText color={COLORS.red} fontSize="xs">
+            <Field.ErrorText {...errorTextStyles}>
               {errors.description}
             </Field.ErrorText>
           ) : null}
         </Field.Root>
 
         {submitError ? (
-          <Text role="alert" fontSize="sm" color={COLORS.red}>
+          <Text role="alert" {...errorTextStyles} fontSize="sm">
             {submitError}
           </Text>
         ) : null}
 
         {isValid && !onSubmit ? (
-          <Text fontSize="sm" color={COLORS.green}>
+          <Text {...successTextStyles}>
             Expense details are valid. Saving is not connected yet.
           </Text>
         ) : null}

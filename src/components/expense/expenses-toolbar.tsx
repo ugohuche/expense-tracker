@@ -3,20 +3,16 @@
 import { Box, Button, Flex, Input, NativeSelect } from "@chakra-ui/react";
 
 import { CATEGORY_OPTIONS } from "@/app/expenses/expense-form/constants/categories";
-
-import { COLORS } from "../constants/colors";
-import {
-  controlStyles,
-  focusRing,
-  nativeSelectOptionStyles,
-} from "../constants/styles";
 import type {
   CategoryFilter,
   DateRangeFilter,
   ExpenseFilters,
   SortOption,
-} from "../types";
+} from "@/app/expenses/types";
+
+import { COLORS } from "./colors";
 import { SearchIcon } from "./icons";
+import { controlStyles, focusRing, nativeSelectOptionStyles } from "./styles";
 
 interface ExpensesToolbarProps {
   filters: ExpenseFilters;
@@ -139,8 +135,8 @@ export function ExpensesToolbar({
           size="sm"
           variant="ghost"
           flexShrink={0}
-          color={COLORS.gold}
-          _hover={{ bg: COLORS.goldSurface }}
+          color={COLORS.text}
+          _hover={{ bg: COLORS.primarySurface }}
           _focusVisible={focusRing}
           onClick={onClearFilters}
         >

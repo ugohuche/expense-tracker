@@ -2,14 +2,19 @@
 
 import { Box, Button, Dialog, Flex, Text } from "@chakra-ui/react";
 
-import { COLORS } from "../constants/colors";
+import type { ExpenseRecord } from "@/app/expenses/types";
+import {
+  formatCurrency,
+  formatDate,
+  getCategoryOption,
+} from "@/app/expenses/utils";
+
+import { COLORS } from "./colors";
 import {
   dangerButtonStyles,
   dialogSurfaceStyles,
   secondaryButtonStyles,
-} from "../constants/styles";
-import type { ExpenseRecord } from "../types";
-import { formatCurrency, formatDate, getCategoryOption } from "../utils";
+} from "./styles";
 
 interface DeleteExpenseDialogProps {
   open: boolean;

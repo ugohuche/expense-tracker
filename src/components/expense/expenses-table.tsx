@@ -11,17 +11,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { COLORS } from "../constants/colors";
+import type { ExpenseRecord } from "@/app/expenses/types";
+import {
+  formatCurrency,
+  formatDate,
+  getCategoryOption,
+} from "@/app/expenses/utils";
+
+import { COLORS } from "./colors";
+import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
 import {
   focusRing,
   primaryButtonStyles,
   secondaryButtonStyles,
   surfaceStyles,
   tableHeaderStyles,
-} from "../constants/styles";
-import type { ExpenseRecord } from "../types";
-import { formatCurrency, formatDate, getCategoryOption } from "../utils";
-import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
+} from "./styles";
 
 interface ExpensesTableProps {
   expenses: ExpenseRecord[];
@@ -89,7 +94,7 @@ export function ExpensesTable({
           }}
         >
           <Table.Header>
-            <Table.Row>
+            <Table.Row bg={COLORS.raised}>
               <Table.ColumnHeader {...tableHeaderStyles}>
                 Description
               </Table.ColumnHeader>
@@ -108,7 +113,7 @@ export function ExpensesTable({
               <Table.ColumnHeader textAlign="right" {...tableHeaderStyles}>
                 Amount
               </Table.ColumnHeader>
-              <Table.ColumnHeader bg={COLORS.raised} w="12">
+              <Table.ColumnHeader {...tableHeaderStyles} w="12">
                 <Text srOnly>Actions</Text>
               </Table.ColumnHeader>
             </Table.Row>

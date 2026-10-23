@@ -1,6 +1,6 @@
 import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
 
-import { COLORS } from "./constants/colors";
+import { COLORS } from "@/components/expense/colors";
 
 export default function Loading() {
   return (
@@ -21,25 +21,25 @@ export default function Loading() {
           gap={4}
         >
           <Box>
-            <Skeleton h="8" w="40" bg={COLORS.raised} />
-            <Skeleton mt={3} h="4" w="72" maxW="full" bg={COLORS.raised} />
+            <Skeleton h="8" w="40" bg={COLORS.border} />
+            <Skeleton mt={3} h="4" w="72" maxW="full" bg={COLORS.border} />
           </Box>
-          <Skeleton h="10" w="32" borderRadius="lg" bg={COLORS.raised} />
+          <Skeleton h="10" w="32" borderRadius="lg" bg={COLORS.border} />
         </Flex>
 
         <Skeleton
           h={{ base: "64", xl: "28" }}
           borderRadius="xl"
-          bg={COLORS.raised}
+          bg={COLORS.border}
         />
 
         <Stack gap={4}>
           <Skeleton
             h={{ base: "44", lg: "10" }}
             borderRadius="lg"
-            bg={COLORS.raised}
+            bg={COLORS.border}
           />
-          <Skeleton h="96" borderRadius="xl" bg={COLORS.raised} />
+          <Skeleton h="96" borderRadius="xl" bg={COLORS.border} />
         </Stack>
       </Stack>
     </Box>

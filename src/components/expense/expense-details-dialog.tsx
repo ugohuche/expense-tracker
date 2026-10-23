@@ -2,16 +2,21 @@
 
 import { Box, Button, Dialog, Flex, IconButton, Text } from "@chakra-ui/react";
 
-import { COLORS } from "../constants/colors";
+import type { ExpenseRecord } from "@/app/expenses/types";
+import {
+  formatCurrency,
+  formatDate,
+  getCategoryOption,
+} from "@/app/expenses/utils";
+
+import { COLORS } from "./colors";
+import { CloseIcon } from "./icons";
 import {
   dangerOutlineButtonStyles,
   dialogSurfaceStyles,
   focusRing,
   primaryButtonStyles,
-} from "../constants/styles";
-import type { ExpenseRecord } from "../types";
-import { formatCurrency, formatDate, getCategoryOption } from "../utils";
-import { CloseIcon } from "./icons";
+} from "./styles";
 
 interface ExpenseDetailsDialogProps {
   open: boolean;
