@@ -25,10 +25,11 @@ import { SummaryOverview } from "@/components/expense/summary-overview";
 import { loadStoredExpenses, saveStoredExpenses } from "../storage";
 import type { ExpenseFilters, ExpenseRecord } from "../types";
 import {
+  createExpenseRecord,
   filterAndSortExpenses,
   parseDateKey,
   summarizeExpenses,
-  toUtcDateKey,
+  updateExpenseRecord,
 } from "../utils";
 
 const PAGE_SIZE = 8;
@@ -140,14 +141,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
   };
 
   const handleAddExpense = (values: ExpenseInput) => {
-    const expense: ExpenseRecord = {
-      id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      description: values.description,
-      category: values.category,
-      amount: Number(values.amount),
-      currency: values.currency,
-      expenseDate: toUtcDateKey(values.expenseDate),
-    };
+    const expense = createExpenseRecord(values);
 
     setExpenses((current) => [expense, ...current]);
     setFilters(DEFAULT_FILTERS);
@@ -161,14 +155,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
       return;
     }
 
-    const updatedExpense: ExpenseRecord = {
-      ...editingExpense,
-      description: values.description,
-      category: values.category,
-      amount: Number(values.amount),
-      currency: values.currency,
-      expenseDate: toUtcDateKey(values.expenseDate),
-    };
+    const updatedExpense = updateExpenseRecord(editingExpense, values);
 
     setExpenses((current) =>
       current.map((expense) =>
