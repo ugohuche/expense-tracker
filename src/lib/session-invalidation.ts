@@ -17,7 +17,9 @@ const cache = new Map<string, CacheEntry>();
  * Reads only the `passwordChangedAt` column of a user (primary key lookup).
  * The result is memoised for a few seconds.
  */
-export async function getPasswordChangedAt(userId: string): Promise<Date | null> {
+export async function getPasswordChangedAt(
+  userId: string,
+): Promise<Date | null> {
   const now = Date.now();
   const cached = cache.get(userId);
 
@@ -30,7 +32,9 @@ export async function getPasswordChangedAt(userId: string): Promise<Date | null>
     select: { passwordChangedAt: true },
   });
 
-  const value = user?.passwordChangedAt ? user.passwordChangedAt.getTime() : null;
+  const value = user?.passwordChangedAt
+    ? user.passwordChangedAt.getTime()
+    : null;
   cache.set(userId, { value, expiresAt: now + CACHE_TTL_MS });
 
   return value === null ? null : new Date(value);
@@ -40,7 +44,10 @@ export async function getPasswordChangedAt(userId: string): Promise<Date | null>
  * Called right after a password change so the next session check already sees
  * the new value instead of the memoised one.
  */
-export function setPasswordChangedAtCache(userId: string, changedAt: Date): void {
+export function setPasswordChangedAtCache(
+  userId: string,
+  changedAt: Date,
+): void {
   cache.set(userId, {
     value: changedAt.getTime(),
     expiresAt: Date.now() + CACHE_TTL_MS,

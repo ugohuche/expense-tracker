@@ -10,7 +10,8 @@ export function hashResetToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }
 
-export type ResetTokenStatus = "valid" | "missing" | "invalid" | "expired" | "used";
+export type ResetTokenStatus =
+  "valid" | "missing" | "invalid" | "expired" | "used";
 
 export function getResetTokenExpiry(): Date {
   return new Date(Date.now() + RESET_TOKEN_TTL_MS);

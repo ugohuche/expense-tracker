@@ -1,8 +1,16 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Button, Field, Input, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Field,
+  Input,
+  Link as ChakraLink,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { login } from "@/lib/actions/auth";
 
@@ -68,6 +76,16 @@ export default function LoginForm() {
           <Field.ErrorText aria-live="polite">
             {state?.errors?.password?.[0]}
           </Field.ErrorText>
+          <ChakraLink
+            asChild
+            alignSelf="flex-end"
+            color="brand.teal"
+            fontSize="sm"
+            fontWeight="medium"
+            textDecoration="underline"
+          >
+            <Link href="/forgot-password">Forgot password?</Link>
+          </ChakraLink>
         </Field.Root>
 
         {state?.message ? (

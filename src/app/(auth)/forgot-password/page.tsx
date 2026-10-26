@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
-import {
-  Heading,
-  Link as ChakraLink,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Heading, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
 
 import ForgotPasswordForm from "@/components/auth/forgot-password-form";
 

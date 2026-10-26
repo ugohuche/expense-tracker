@@ -13,7 +13,11 @@ import {
 } from "@/lib/definitions";
 import { sendPasswordChangedEmail, sendPasswordResetEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
-import { checkRateLimit, getClientIp, RATE_LIMIT_MESSAGE } from "@/lib/rate-limit";
+import {
+  checkRateLimit,
+  getClientIp,
+  RATE_LIMIT_MESSAGE,
+} from "@/lib/rate-limit";
 import {
   generateResetToken,
   getResetTokenExpiry,
@@ -71,7 +75,10 @@ export async function requestPasswordReset(
 
   // Run a real bcrypt comparison for every request so known and unknown
   // addresses take about the same time.
-  await bcrypt.compare("reset-password-timing-placeholder", DUMMY_PASSWORD_HASH);
+  await bcrypt.compare(
+    "reset-password-timing-placeholder",
+    DUMMY_PASSWORD_HASH,
+  );
 
   const user = await prisma.user.findUnique({
     where: { email },
@@ -150,7 +157,8 @@ export async function resetPassword(
 
   if (record.usedAt) {
     return {
-      message: "This reset link has already been used. Request a new one to continue.",
+      message:
+        "This reset link has already been used. Request a new one to continue.",
       tone: "error",
       requestNewLink: true,
     };
@@ -188,7 +196,8 @@ export async function resetPassword(
     });
   } catch {
     return {
-      message: "This reset link has already been used. Request a new one to continue.",
+      message:
+        "This reset link has already been used. Request a new one to continue.",
       tone: "error",
       requestNewLink: true,
     };

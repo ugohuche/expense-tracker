@@ -41,3 +41,51 @@ export type LoginFormState =
       message?: string;
     }
   | undefined;
+
+export const ForgotPasswordSchema = z.object({
+  email: z.email({ error: "Please enter a valid email." }).trim(),
+});
+
+export type ForgotPasswordState =
+  | {
+      errors?: {
+        email?: string[];
+      };
+      message?: string;
+      tone?: "error" | "info";
+    }
+  | undefined;
+
+const PasswordSchema = z
+  .string()
+  .min(8, { error: "Be at least 8 characters long." })
+  .regex(/[a-zA-Z]/, { error: "Contain at least one letter." })
+  .regex(/[0-9]/, { error: "Contain at least one number." })
+  .regex(/[^a-zA-Z0-9]/, {
+    error: "Contain at least one special character.",
+  });
+
+export const ResetPasswordSchema = z
+  .object({
+    token: z.string().min(1, { error: "Reset token is required." }),
+    password: PasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { error: "Please confirm your new password." }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    error: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export type ResetPasswordState =
+  | {
+      errors?: {
+        password?: string[];
+        confirmPassword?: string[];
+      };
+      message?: string;
+      tone?: "error" | "info";
+      requestNewLink?: boolean;
+    }
+  | undefined;

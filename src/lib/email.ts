@@ -6,7 +6,8 @@ const EXPIRY_MINUTES = 15;
 
 function getAppUrl(): string {
   const configured = process.env.APP_URL?.trim();
-  const base = configured && configured.length > 0 ? configured : "http://localhost:3000";
+  const base =
+    configured && configured.length > 0 ? configured : "http://localhost:3000";
 
   return base.replace(/\/+$/, "");
 }
