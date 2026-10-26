@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 const monthlySpending = [
   { month: "Jan", height: 24 },
@@ -216,9 +217,7 @@ export default function Dashboard() {
           border="1px solid"
           borderColor="gray.100"
         >
-          <Heading size="lg" color="#0B2545">
-            Budget Progress
-          </Heading>
+          <Link href="/expenses/new">Add expense</Link>
 
           <Box mt="8">
             <Flex justify="space-between" mb="3">
