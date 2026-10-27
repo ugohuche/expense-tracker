@@ -12,14 +12,14 @@ import {
 } from "@chakra-ui/react";
 
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
-import { COLORS } from "@/components/expense/colors";
+import { COLORS } from "@/components/shared/colors";
 import { DeleteExpenseDialog } from "@/components/expense/delete-expense-dialog";
 import { ExpenseDetailsDialog } from "@/components/expense/expense-details-dialog";
 import { ExpenseDialog } from "@/components/expense/expense-dialog";
 import { ExpensesTable } from "@/components/expense/expenses-table";
 import { ExpensesToolbar } from "@/components/expense/expenses-toolbar";
-import { PlusIcon } from "@/components/expense/icons";
-import { focusRing, primaryButtonStyles } from "@/components/expense/styles";
+import { PlusIcon } from "@/components/shared/icons";
+import { focusRing, primaryButtonStyles } from "@/components/shared/styles";
 import { SummaryOverview } from "@/components/expense/summary-overview";
 
 import { loadStoredExpenses, saveStoredExpenses } from "../storage";

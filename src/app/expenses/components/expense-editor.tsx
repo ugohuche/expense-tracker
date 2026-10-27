@@ -14,12 +14,12 @@ import {
 } from "@chakra-ui/react";
 
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
-import { COLORS } from "@/components/expense/colors";
+import { COLORS } from "@/components/shared/colors";
 import { ExpenseForm } from "@/components/expense/expense-form";
 import {
   secondaryButtonStyles,
   surfaceStyles,
-} from "@/components/expense/styles";
+} from "@/components/shared/styles";
 
 import { loadStoredExpenses, saveStoredExpenses } from "../storage";
 import type { ExpenseRecord } from "../types";

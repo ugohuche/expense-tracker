@@ -10,9 +10,13 @@ import type {
   SortOption,
 } from "@/app/expenses/types";
 
-import { COLORS } from "./colors";
-import { SearchIcon } from "./icons";
-import { controlStyles, focusRing, nativeSelectOptionStyles } from "./styles";
+import { COLORS } from "@/components/shared/colors";
+import { SearchIcon } from "@/components/shared/icons";
+import {
+  controlStyles,
+  focusRing,
+  nativeSelectOptionStyles,
+} from "@/components/shared/styles";
 
 interface ExpensesToolbarProps {
   filters: ExpenseFilters;
