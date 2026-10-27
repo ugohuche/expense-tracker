@@ -7,8 +7,8 @@ import {
   getCategoryOption,
 } from "@/app/expenses/utils";
 
-import { COLORS } from "./colors";
-import { metaLabelStyles, surfaceStyles } from "./styles";
+import { COLORS } from "@/components/shared/colors";
+import { metaLabelStyles, surfaceStyles } from "@/components/shared/styles";
 
 interface SummaryOverviewProps {
   summary: ExpenseSummary;

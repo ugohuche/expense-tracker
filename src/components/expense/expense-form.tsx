@@ -31,8 +31,8 @@ import {
 } from "@/app/expenses/expense-form/expense-schema";
 import { formatDate } from "@/app/expenses/utils";
 
-import { COLORS } from "./colors";
-import { CalendarIcon, CloseIcon } from "./icons";
+import { COLORS } from "@/components/shared/colors";
+import { CalendarIcon, CloseIcon } from "@/components/shared/icons";
 import {
   controlStyles,
   errorTextStyles,
@@ -41,7 +41,7 @@ import {
   primaryButtonStyles,
   secondaryButtonStyles,
   successTextStyles,
-} from "./styles";
+} from "@/components/shared/styles";
 
 export interface ExpenseFormProps {
   initialCategory?: Category;
