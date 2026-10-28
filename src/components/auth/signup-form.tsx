@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Button, Field, Input, Stack, Text } from "@chakra-ui/react";
 
+import PasswordInput from "@/components/auth/password-input";
 import { signup } from "@/lib/actions/auth";
 
 const inputStyles = {
@@ -54,10 +55,9 @@ export default function SignupForm() {
 
         <Field.Root invalid={Boolean(state?.errors?.password)}>
           <Field.Label htmlFor="password">Password</Field.Label>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="new-password"
             placeholder="••••••••"
             {...inputStyles}

@@ -5,12 +5,12 @@ import Link from "next/link";
 import {
   Button,
   Field,
-  Input,
   Link as ChakraLink,
   Stack,
   Text,
 } from "@chakra-ui/react";
 
+import PasswordInput from "@/components/auth/password-input";
 import { resetPassword } from "@/lib/actions/reset-password";
 
 const inputStyles = {
@@ -61,10 +61,9 @@ export default function ResetPasswordForm({ token }: { token: string }) {
           <Field.Label htmlFor="password" color="brand.slate">
             New password
           </Field.Label>
-          <Input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             autoComplete="new-password"
             placeholder="••••••••"
             {...inputStyles}
@@ -96,10 +95,9 @@ export default function ResetPasswordForm({ token }: { token: string }) {
           <Field.Label htmlFor="confirmPassword" color="brand.slate">
             Confirm new password
           </Field.Label>
-          <Input
+          <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
-            type="password"
             autoComplete="new-password"
             placeholder="••••••••"
             {...inputStyles}

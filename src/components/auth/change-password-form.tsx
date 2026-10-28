@@ -1,8 +1,9 @@
 "use client";
 
 import { useActionState } from "react";
-import { Button, Field, Input, Stack, Text } from "@chakra-ui/react";
+import { Button, Field, Stack, Text } from "@chakra-ui/react";
 
+import PasswordInput from "@/components/auth/password-input";
 import { changePassword } from "@/lib/actions/change-password";
 
 const inputStyles = {
@@ -42,10 +43,9 @@ export default function ChangePasswordForm() {
           <Field.Label htmlFor="currentPassword" color="brand.slate">
             Current password
           </Field.Label>
-          <Input
+          <PasswordInput
             id="currentPassword"
             name="currentPassword"
-            type="password"
             autoComplete="current-password"
             placeholder="••••••••"
             {...inputStyles}
@@ -60,10 +60,9 @@ export default function ChangePasswordForm() {
           <Field.Label htmlFor="newPassword" color="brand.slate">
             New password
           </Field.Label>
-          <Input
+          <PasswordInput
             id="newPassword"
             name="newPassword"
-            type="password"
             autoComplete="new-password"
             placeholder="••••••••"
             {...inputStyles}
@@ -95,10 +94,9 @@ export default function ChangePasswordForm() {
           <Field.Label htmlFor="confirmPassword" color="brand.slate">
             Confirm new password
           </Field.Label>
-          <Input
+          <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
-            type="password"
             autoComplete="new-password"
             placeholder="••••••••"
             {...inputStyles}
