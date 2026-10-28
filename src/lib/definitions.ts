@@ -89,3 +89,29 @@ export type ResetPasswordState =
       requestNewLink?: boolean;
     }
   | undefined;
+
+export const ChangePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(1, { error: "Please enter your current password." }),
+    newPassword: PasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { error: "Please confirm your new password." }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    error: "Passwords do not match.",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordState =
+  | {
+      errors?: {
+        currentPassword?: string[];
+        newPassword?: string[];
+        confirmPassword?: string[];
+      };
+      message?: string;
+    }
+  | undefined;

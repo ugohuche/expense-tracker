@@ -5,6 +5,10 @@ import bcrypt from "bcryptjs";
 import { authConfig } from "@/auth.config";
 import { prisma } from "@/lib/prisma";
 import { LoginFormSchema } from "@/lib/definitions";
+import {
+  getPasswordChangedAt,
+  isSessionStale,
+} from "@/lib/session-invalidation";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -45,10 +49,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     ...authConfig.callbacks,
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.authTime = Math.floor(Date.now() / 1000);
+        return token;
       }
+
+      // `iat` is refreshed every time the token is re-signed, so the sign-in
+      // time is tracked separately. Tokens issued before `authTime` existed
+      // count as signed in at 0, so a password change still revokes them.
+      if (typeof token.id === "string") {
+        const authTime =
+          typeof token.authTime === "number" ? token.authTime : 0;
+        const passwordChangedAt = await getPasswordChangedAt(token.id);
+        if (isSessionStale(authTime, passwordChangedAt)) {
+          return null;
+        }
+      }
+
       return token;
     },
     session({ session, token }) {

@@ -27,6 +27,7 @@ export default function LoginForm() {
   const [state, formAction, pending] = useActionState(login, undefined);
   const searchParams = useSearchParams();
   const justRegistered = searchParams.get("registered") === "1";
+  const passwordChanged = searchParams.get("passwordChanged") === "1";
 
   return (
     <form action={formAction}>
@@ -43,6 +44,21 @@ export default function LoginForm() {
             py={2}
           >
             Account created. You can log in now.
+          </Text>
+        ) : null}
+
+        {passwordChanged ? (
+          <Text
+            aria-live="polite"
+            bg="brand.green/10"
+            borderRadius="lg"
+            color="brand.green"
+            fontSize="sm"
+            fontWeight="medium"
+            px={3}
+            py={2}
+          >
+            Password updated. Please log in again.
           </Text>
         ) : null}
 
