@@ -4,7 +4,6 @@ import {
   type CategoryOption,
 } from "@/app/expenses/expense-form/constants/categories";
 import type { Currency } from "@/app/expenses/expense-form/constants/currencies";
-import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
 
 import type {
   ExpenseFilters,
@@ -53,31 +52,6 @@ export function toLocalDateKey(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-export function createExpenseRecord(values: ExpenseInput): ExpenseRecord {
-  return {
-    id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    description: values.description,
-    category: values.category,
-    amount: Number(values.amount),
-    currency: values.currency,
-    expenseDate: toUtcDateKey(values.expenseDate),
-  };
-}
-
-export function updateExpenseRecord(
-  expense: ExpenseRecord,
-  values: ExpenseInput,
-): ExpenseRecord {
-  return {
-    ...expense,
-    description: values.description,
-    category: values.category,
-    amount: Number(values.amount),
-    currency: values.currency,
-    expenseDate: toUtcDateKey(values.expenseDate),
-  };
 }
 
 function monthsBetween(date: Date, reference: Date): number {
