@@ -74,9 +74,7 @@ export function ExpensesTable({
           <Text mt={0.5} fontSize="sm" color={COLORS.muted}>
             {hasAnyExpenses
               ? `${totalCount} ${totalCount === 1 ? "expense" : "expenses"}${
-                  hasFilters
-                    ? " matching your filters"
-                    : " saved in this browser"
+                  hasFilters ? " matching your filters" : " saved"
                 }`
               : "No expenses recorded yet"}
           </Text>

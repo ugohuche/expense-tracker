@@ -26,12 +26,12 @@ export const expenseSchema = z.object({
   description: z
     .string()
     .trim()
-    .transform((value) => (value === "" ? null : value)),
+    .nullable()
+    .transform((value) => (value === "" || value === null ? null : value)),
   expenseDate: z
     .string()
     .regex(DATE_PATTERN, { error: "Select a valid date" })
-    .refine(isValidDateOnly, { error: "Select a valid date" })
-    .transform((value) => new Date(`${value}T00:00:00Z`)),
+    .refine(isValidDateOnly, { error: "Select a valid date" }),
 });
 
 export type ExpenseInput = z.infer<typeof expenseSchema>;

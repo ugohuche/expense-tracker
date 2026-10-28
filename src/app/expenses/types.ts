@@ -11,6 +11,12 @@ export interface ExpenseRecord {
   expenseDate: string;
 }
 
+export type ExpenseActionResult =
+  { success: true; expense: ExpenseRecord } | { success: false; error: string };
+
+export type ExpenseDeleteResult =
+  { success: true } | { success: false; error: string };
+
 export type CategoryFilter = Category | "all";
 
 export type DateRangeFilter = "all" | "this-month" | "last-month" | "this-year";

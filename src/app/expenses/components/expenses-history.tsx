@@ -11,25 +11,28 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import type { Currency } from "@/app/expenses/expense-form/constants/currencies";
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
 import { COLORS } from "@/components/shared/colors";
 import { DeleteExpenseDialog } from "@/components/expense/delete-expense-dialog";
 import { ExpenseDetailsDialog } from "@/components/expense/expense-details-dialog";
 import { ExpenseDialog } from "@/components/expense/expense-dialog";
+import {
+  ExpenseToaster,
+  expenseToaster,
+} from "@/components/expense/expense-toaster";
 import { ExpensesTable } from "@/components/expense/expenses-table";
 import { ExpensesToolbar } from "@/components/expense/expenses-toolbar";
 import { PlusIcon } from "@/components/shared/icons";
-import { focusRing, primaryButtonStyles } from "@/components/shared/styles";
+import { primaryButtonStyles } from "@/components/shared/styles";
 import { SummaryOverview } from "@/components/expense/summary-overview";
 
-import { loadStoredExpenses, saveStoredExpenses } from "../storage";
+import { createExpense, deleteExpense, updateExpense } from "../actions";
 import type { ExpenseFilters, ExpenseRecord } from "../types";
 import {
-  createExpenseRecord,
   filterAndSortExpenses,
   parseDateKey,
   summarizeExpenses,
-  updateExpenseRecord,
 } from "../utils";
 
 const PAGE_SIZE = 8;
@@ -44,12 +47,17 @@ const DEFAULT_FILTERS: ExpenseFilters = {
 interface ExpensesHistoryProps {
   /** YYYY-MM-DD reference date supplied by the server render. */
   referenceDate: string;
+  initialExpenses: ExpenseRecord[];
+  defaultCurrency: Currency;
 }
 
-export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
-  const [expenses, setExpenses] = React.useState<ExpenseRecord[]>([]);
-  const [hasLoadedStoredExpenses, setHasLoadedStoredExpenses] =
-    React.useState(false);
+export function ExpensesHistory({
+  referenceDate,
+  initialExpenses,
+  defaultCurrency,
+}: ExpensesHistoryProps) {
+  const [expenses, setExpenses] =
+    React.useState<ExpenseRecord[]>(initialExpenses);
   const [filters, setFilters] = React.useState<ExpenseFilters>(DEFAULT_FILTERS);
   const [page, setPage] = React.useState(1);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
@@ -62,25 +70,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
   const [deletingExpense, setDeletingExpense] =
     React.useState<ExpenseRecord | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [notice, setNotice] = React.useState<string | null>(null);
   const pendingDetailsActionRef = React.useRef<(() => void) | null>(null);
-
-  React.useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setExpenses(loadStoredExpenses());
-      setHasLoadedStoredExpenses(true);
-    }, 0);
-
-    return () => window.clearTimeout(timeout);
-  }, []);
-
-  React.useEffect(() => {
-    if (!hasLoadedStoredExpenses) {
-      return;
-    }
-
-    saveStoredExpenses(expenses);
-  }, [expenses, hasLoadedStoredExpenses]);
 
   const reference = React.useMemo(
     () => parseDateKey(referenceDate),
@@ -140,45 +130,75 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
     pendingAction?.();
   };
 
-  const handleAddExpense = (values: ExpenseInput) => {
-    const expense = createExpenseRecord(values);
+  const handleAddExpense = async (values: ExpenseInput) => {
+    const result = await createExpense(values);
 
-    setExpenses((current) => [expense, ...current]);
+    if (!result.success) {
+      expenseToaster.create({ title: result.error, type: "error" });
+      throw new Error(result.error);
+    }
+
+    setExpenses((current) => [result.expense, ...current]);
     setFilters(DEFAULT_FILTERS);
     setPage(1);
     setIsDialogOpen(false);
-    setNotice("Expense saved in this browser.");
+    expenseToaster.create({
+      title: "Expense added successfully.",
+      type: "success",
+    });
   };
 
-  const handleUpdateExpense = (values: ExpenseInput) => {
+  const handleUpdateExpense = async (values: ExpenseInput) => {
     if (!editingExpense) {
       return;
     }
 
-    const updatedExpense = updateExpenseRecord(editingExpense, values);
+    const result = await updateExpense(editingExpense.id, values);
+
+    if (!result.success) {
+      expenseToaster.create({ title: result.error, type: "error" });
+      throw new Error(result.error);
+    }
 
     setExpenses((current) =>
       current.map((expense) =>
-        expense.id === updatedExpense.id ? updatedExpense : expense,
+        expense.id === result.expense.id ? result.expense : expense,
       ),
     );
     setIsEditDialogOpen(false);
-    setNotice("Expense updated in this browser.");
+    expenseToaster.create({
+      title: "Expense updated successfully.",
+      type: "success",
+    });
   };
 
-  const handleDeleteExpense = () => {
+  const handleDeleteExpense = async () => {
     if (!deletingExpense) {
       return;
     }
 
-    const description =
-      deletingExpense.description?.trim() || "Untitled expense";
+    try {
+      const result = await deleteExpense(deletingExpense.id);
 
-    setExpenses((current) =>
-      current.filter((expense) => expense.id !== deletingExpense.id),
-    );
-    setIsDeleteDialogOpen(false);
-    setNotice(`Deleted “${description}” from this browser.`);
+      if (!result.success) {
+        expenseToaster.create({ title: result.error, type: "error" });
+        return;
+      }
+
+      setExpenses((current) =>
+        current.filter((expense) => expense.id !== deletingExpense.id),
+      );
+      setIsDeleteDialogOpen(false);
+      expenseToaster.create({
+        title: "Expense deleted successfully.",
+        type: "success",
+      });
+    } catch {
+      expenseToaster.create({
+        title: "We couldn't delete this expense. Please try again.",
+        type: "error",
+      });
+    }
   };
 
   const openEditDialog = (expense: ExpenseRecord) => {
@@ -224,7 +244,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
                 Expenses
               </Heading>
               <Text mt={2} fontSize="sm" lineHeight="1.6" color={COLORS.muted}>
-                Review and manage expenses saved in this browser.
+                Review and manage your saved expenses.
               </Text>
             </Box>
 
@@ -240,40 +260,6 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
               </HStack>
             </Button>
           </Flex>
-
-          {notice ? (
-            <Flex
-              role="status"
-              aria-live="polite"
-              align={{ base: "flex-start", sm: "center" }}
-              justify="space-between"
-              direction={{ base: "column", sm: "row" }}
-              gap={2}
-              bg={COLORS.card}
-              borderWidth="1px"
-              borderColor={COLORS.border}
-              borderLeftWidth="3px"
-              borderLeftColor={COLORS.success}
-              borderRadius="lg"
-              boxShadow="sm"
-              px={4}
-              py={3}
-            >
-              <Text fontSize="sm" color={COLORS.text}>
-                {notice}
-              </Text>
-              <Button
-                size="xs"
-                variant="ghost"
-                color={COLORS.text}
-                _hover={{ bg: COLORS.primarySurface }}
-                _focusVisible={focusRing}
-                onClick={() => setNotice(null)}
-              >
-                Dismiss
-              </Button>
-            </Flex>
-          ) : null}
 
           <Stack gap={4}>
             <SummaryOverview summary={summary} />
@@ -317,7 +303,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
         open={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
         onSubmit={handleAddExpense}
-        defaultCurrency={expenses[0]?.currency ?? "USD"}
+        defaultCurrency={defaultCurrency}
       />
 
       <ExpenseDialog
@@ -325,7 +311,7 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
         expense={editingExpense}
         onClose={() => setIsEditDialogOpen(false)}
         onSubmit={handleUpdateExpense}
-        defaultCurrency={expenses[0]?.currency ?? "USD"}
+        defaultCurrency={defaultCurrency}
       />
 
       <DeleteExpenseDialog
@@ -334,6 +320,8 @@ export function ExpensesHistory({ referenceDate }: ExpensesHistoryProps) {
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={handleDeleteExpense}
       />
+
+      <ExpenseToaster />
     </Box>
   );
 }
