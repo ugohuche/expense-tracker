@@ -12,12 +12,10 @@ export interface ExpenseRecord {
 }
 
 export type ExpenseActionResult =
-  | { success: true; expense: ExpenseRecord }
-  | { success: false; error: string };
+  { success: true; expense: ExpenseRecord } | { success: false; error: string };
 
 export type ExpenseDeleteResult =
-  | { success: true }
-  | { success: false; error: string };
+  { success: true } | { success: false; error: string };
 
 export type CategoryFilter = Category | "all";
 

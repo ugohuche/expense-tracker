@@ -34,11 +34,7 @@ async function ExpenseDetailContent({ params }: ExpenseDetailContentProps) {
   }
 
   return (
-    <ExpenseEditor
-      key={id}
-      expense={expense}
-      defaultCurrency={currency}
-    />
+    <ExpenseEditor key={id} expense={expense} defaultCurrency={currency} />
   );
 }
 

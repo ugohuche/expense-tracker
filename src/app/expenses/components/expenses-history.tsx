@@ -24,7 +24,7 @@ import {
 import { ExpensesTable } from "@/components/expense/expenses-table";
 import { ExpensesToolbar } from "@/components/expense/expenses-toolbar";
 import { PlusIcon } from "@/components/shared/icons";
-import { focusRing, primaryButtonStyles } from "@/components/shared/styles";
+import { primaryButtonStyles } from "@/components/shared/styles";
 import { SummaryOverview } from "@/components/expense/summary-overview";
 
 import { createExpense, deleteExpense, updateExpense } from "../actions";
