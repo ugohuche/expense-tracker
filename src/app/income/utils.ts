@@ -1,4 +1,3 @@
-import type { IncomeInput } from "./income-schema";
 import type { IncomeFilters, IncomeRecord, IncomeSummary } from "./types";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
@@ -21,29 +20,6 @@ export function toIncomeDateKey(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
-}
-
-export function createIncomeRecord(values: IncomeInput): IncomeRecord {
-  return {
-    id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    amount: Number(values.amount),
-    source: values.source,
-    description: values.description,
-    incomeDate: values.incomeDate,
-  };
-}
-
-export function updateIncomeRecord(
-  income: IncomeRecord,
-  values: IncomeInput,
-): IncomeRecord {
-  return {
-    ...income,
-    amount: Number(values.amount),
-    source: values.source,
-    description: values.description,
-    incomeDate: values.incomeDate,
-  };
 }
 
 function monthsBetween(date: Date, reference: Date): number {

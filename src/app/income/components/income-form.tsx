@@ -17,6 +17,7 @@ import {
 
 import type { IncomeInput } from "../income-schema";
 import { incomeSchema } from "../income-schema";
+import { toaster } from "../toaster";
 import { formatIncomeDate } from "../utils";
 import { COLORS } from "@/components/shared/colors";
 import {
@@ -28,14 +29,14 @@ import {
 } from "@/components/shared/styles";
 import { CloseIcon } from "@/components/shared/icons";
 
+import type { IncomeRecord } from "../types";
+
 interface IncomeFormProps {
   today: string;
-  initialIncome?: {
-    amount: number;
-    source: string | null;
-    description: string | null;
-    incomeDate: string;
-  } | null;
+  initialIncome?: Pick<
+    IncomeRecord,
+    "amount" | "source" | "description" | "incomeDate"
+  > | null;
   onSubmit: (values: IncomeInput) => void | Promise<void>;
   onCancel: () => void;
 }
@@ -82,7 +83,6 @@ export function IncomeForm({
     initialIncome?.incomeDate ?? today,
   );
   const [errors, setErrors] = React.useState<FormErrors>({});
-  const [submitError, setSubmitError] = React.useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const submitGuard = React.useRef(false);
 
@@ -92,7 +92,6 @@ export function IncomeForm({
       return;
     }
 
-    setSubmitError(null);
     const result = incomeSchema.safeParse({
       amount,
       source,
@@ -124,9 +123,11 @@ export function IncomeForm({
     try {
       await onSubmit(result.data);
     } catch {
-      setSubmitError(
-        "We couldn't save this income. Please try again and check browser storage availability.",
-      );
+      toaster.create({
+        title: "Income could not be saved.",
+        description: "Please try again.",
+        type: "error",
+      });
     } finally {
       submitGuard.current = false;
       setIsSubmitting(false);
@@ -245,12 +246,6 @@ export function IncomeForm({
             </Field.ErrorText>
           ) : null}
         </Field.Root>
-
-        {submitError ? (
-          <Text role="alert" {...errorTextStyles} fontSize="sm">
-            {submitError}
-          </Text>
-        ) : null}
 
         <HStack gap="3" mt="1" align="stretch">
           <Button
