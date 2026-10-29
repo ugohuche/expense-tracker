@@ -1,49 +1,17 @@
 import { prisma } from "@/lib/prisma";
 
 /**
- * Cache TTL for the `sessionVersion` lookup that happens on every session
- * read. Keeps the extra query off the hot path while staying fresh enough.
- */
-const CACHE_TTL_MS = 5_000;
-
-type CacheEntry = {
-  value: number | null;
-  expiresAt: number;
-};
-
-const cache = new Map<string, CacheEntry>();
-
-/**
  * Reads only the `sessionVersion` column of a user (primary key lookup).
- * The result is memoised for a few seconds.
  */
 export async function getSessionVersion(
   userId: string,
 ): Promise<number | null> {
-  const now = Date.now();
-  const cached = cache.get(userId);
-
-  if (cached && cached.expiresAt > now) {
-    return cached.value;
-  }
-
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { sessionVersion: true },
   });
 
-  const value = user ? user.sessionVersion : null;
-  cache.set(userId, { value, expiresAt: now + CACHE_TTL_MS });
-
-  return value;
-}
-
-/**
- * Called right after a password change so the next session check already sees
- * the new value instead of the memoised one.
- */
-export function setSessionVersionCache(userId: string, version: number): void {
-  cache.set(userId, { value: version, expiresAt: Date.now() + CACHE_TTL_MS });
+  return user ? user.sessionVersion : null;
 }
 
 /**
@@ -52,8 +20,8 @@ export function setSessionVersionCache(userId: string, version: number): void {
  * timing: a session from before the change is always rejected and a login
  * after it is always accepted. Tokens without a version count as version 0.
  *
- * The check is `<` rather than `!==` so a token that is newer than a memoised
- * value (for example a fresh login on another server) is not rejected.
+ * The check is `<` rather than `!==` so a token with a newer version is not
+ * rejected if a password change races with the session check.
  */
 export function isSessionStale(
   tokenVersion: number | undefined,

@@ -23,7 +23,6 @@ import {
   getResetTokenExpiry,
   hashResetToken,
 } from "@/lib/reset-token";
-import { setSessionVersionCache } from "@/lib/session-invalidation";
 
 const NEUTRAL_MESSAGE =
   "If an account exists for that email, we've sent a reset link";
@@ -175,7 +174,7 @@ export async function resetPassword(
   const passwordHash = await bcrypt.hash(password, 10);
   const changedAt = new Date();
 
-  let updatedUser: { id: string; email: string; sessionVersion: number };
+  let updatedUser: { id: string; email: string };
   try {
     updatedUser = await prisma.$transaction(async (tx) => {
       // Claiming the token and updating the password happen in one transaction.
@@ -202,7 +201,7 @@ export async function resetPassword(
           passwordChangedAt: changedAt,
           sessionVersion: { increment: 1 },
         },
-        select: { id: true, email: true, sessionVersion: true },
+        select: { id: true, email: true },
       });
     });
   } catch {
@@ -214,7 +213,6 @@ export async function resetPassword(
     };
   }
 
-  setSessionVersionCache(updatedUser.id, updatedUser.sessionVersion);
   after(async () => {
     await sendPasswordChangedEmail(updatedUser.email);
   });

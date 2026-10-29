@@ -82,7 +82,8 @@ const { requestPasswordReset, resetPassword } =
   await import("@/lib/actions/reset-password");
 const { generateResetToken, getResetTokenExpiry, hashResetToken } =
   await import("@/lib/reset-token");
-const { isSessionStale } = await import("@/lib/session-invalidation");
+const { getSessionVersion, isSessionStale } =
+  await import("@/lib/session-invalidation");
 await import("@/auth");
 
 const OLD_PASSWORD = "OldPass1!";
@@ -246,7 +247,18 @@ describe("session revocation", () => {
     expect(await checkSession(legacy)).toBeNull();
   });
 
-  it("does not reject a token newer than a cached version", () => {
+  it("reads the current session version from the database for every check", async () => {
+    expect(await getSessionVersion(userId)).toBe(0);
+
+    await fakeDb.client.user.update({
+      where: { id: userId },
+      data: { sessionVersion: { increment: 1 } },
+    });
+
+    expect(await getSessionVersion(userId)).toBe(1);
+  });
+
+  it("does not reject a token newer than the current version", () => {
     expect(isSessionStale(1, 0)).toBe(false);
     expect(isSessionStale(0, 1)).toBe(true);
     expect(isSessionStale(undefined, 1)).toBe(true);
