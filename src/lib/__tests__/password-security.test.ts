@@ -264,6 +264,14 @@ describe("session revocation", () => {
     expect(isSessionStale(undefined, 1)).toBe(true);
     expect(isSessionStale(undefined, 0)).toBe(false);
   });
+
+  it("rejects a session whose user no longer exists", async () => {
+    const session = await signIn(OLD_PASSWORD);
+    const orphan = { ...session!, id: "deleted-user" };
+
+    expect(isSessionStale(0, null)).toBe(true);
+    expect(await checkSession(orphan)).toBeNull();
+  });
 });
 
 describe("reset link invalidation", () => {

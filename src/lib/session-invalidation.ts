@@ -19,16 +19,19 @@ export async function getSessionVersion(
  * version is bumped on every password change, so this does not depend on
  * timing: a session from before the change is always rejected and a login
  * after it is always accepted. Tokens without a version count as version 0.
+ * A `null` current version means the user no longer exists, so the session
+ * is stale too.
  *
- * The check is `<` rather than `!==` so a token with a newer version is not
- * rejected if a password change races with the session check.
+ * The check is `<` rather than `!==` so a fresh login is not rejected if a
+ * session check briefly reads an older version (for example from a lagging
+ * read replica).
  */
 export function isSessionStale(
   tokenVersion: number | undefined,
   currentVersion: number | null,
 ): boolean {
   if (currentVersion === null) {
-    return false;
+    return true;
   }
 
   return (tokenVersion ?? 0) < currentVersion;
