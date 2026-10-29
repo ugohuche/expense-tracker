@@ -5,10 +5,7 @@ import bcrypt from "bcryptjs";
 import { authConfig } from "@/auth.config";
 import { prisma } from "@/lib/prisma";
 import { LoginFormSchema } from "@/lib/definitions";
-import {
-  getPasswordChangedAt,
-  isSessionStale,
-} from "@/lib/session-invalidation";
+import { getSessionVersion, isSessionStale } from "@/lib/session-invalidation";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -39,11 +36,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        return {
+        // The version is read in the same query as the password hash, so a
+        // login that checked the old password always gets the old version.
+        const sessionUser = {
           id: user.id,
           name: user.name,
           email: user.email,
+          sessionVersion: user.sessionVersion,
         };
+        return sessionUser;
       },
     }),
   ],
@@ -52,18 +53,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.authTime = Math.floor(Date.now() / 1000);
+        token.sessionVersion =
+          "sessionVersion" in user && typeof user.sessionVersion === "number"
+            ? user.sessionVersion
+            : 0;
         return token;
       }
 
-      // `iat` is refreshed every time the token is re-signed, so the sign-in
-      // time is tracked separately. Tokens issued before `authTime` existed
-      // count as signed in at 0, so a password change still revokes them.
+      // Every password change bumps the user's session version, so tokens
+      // issued for an older version are rejected.
       if (typeof token.id === "string") {
-        const authTime =
-          typeof token.authTime === "number" ? token.authTime : 0;
-        const passwordChangedAt = await getPasswordChangedAt(token.id);
-        if (isSessionStale(authTime, passwordChangedAt)) {
+        const tokenVersion =
+          typeof token.sessionVersion === "number"
+            ? token.sessionVersion
+            : undefined;
+        const currentVersion = await getSessionVersion(token.id);
+        if (isSessionStale(tokenVersion, currentVersion)) {
           return null;
         }
       }

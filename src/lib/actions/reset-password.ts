@@ -23,7 +23,7 @@ import {
   getResetTokenExpiry,
   hashResetToken,
 } from "@/lib/reset-token";
-import { setPasswordChangedAtCache } from "@/lib/session-invalidation";
+import { setSessionVersionCache } from "@/lib/session-invalidation";
 
 const NEUTRAL_MESSAGE =
   "If an account exists for that email, we've sent a reset link";
@@ -175,7 +175,7 @@ export async function resetPassword(
   const passwordHash = await bcrypt.hash(password, 10);
   const changedAt = new Date();
 
-  let updatedUser: { id: string; email: string };
+  let updatedUser: { id: string; email: string; sessionVersion: number };
   try {
     updatedUser = await prisma.$transaction(async (tx) => {
       // Claiming the token and updating the password happen in one transaction.
@@ -188,10 +188,21 @@ export async function resetPassword(
         throw new Error("RESET_TOKEN_ALREADY_USED");
       }
 
+      // Any other unused link for this user stops working as well.
+      await tx.passwordResetToken.updateMany({
+        where: { userId: record.userId, usedAt: null },
+        data: { usedAt: changedAt },
+      });
+
+      // Bumping `sessionVersion` makes every existing session stale.
       return tx.user.update({
         where: { id: record.userId },
-        data: { passwordHash, passwordChangedAt: changedAt },
-        select: { id: true, email: true },
+        data: {
+          passwordHash,
+          passwordChangedAt: changedAt,
+          sessionVersion: { increment: 1 },
+        },
+        select: { id: true, email: true, sessionVersion: true },
       });
     });
   } catch {
@@ -203,7 +214,7 @@ export async function resetPassword(
     };
   }
 
-  setPasswordChangedAtCache(updatedUser.id, changedAt);
+  setSessionVersionCache(updatedUser.id, updatedUser.sessionVersion);
   after(async () => {
     await sendPasswordChangedEmail(updatedUser.email);
   });

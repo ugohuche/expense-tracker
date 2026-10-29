@@ -27,13 +27,19 @@ const inputStyles = {
 export default function LoginForm() {
   const [state, formAction, pending] = useActionState(login, undefined);
   const searchParams = useSearchParams();
-  const justRegistered = searchParams.get("registered") === "1";
-  const passwordChanged = searchParams.get("passwordChanged") === "1";
+  const notice =
+    searchParams.get("registered") === "1"
+      ? "Account created. You can log in now."
+      : searchParams.get("passwordChanged") === "1"
+        ? "Password updated. Please log in again."
+        : searchParams.get("reset") === "1"
+          ? "Password reset. You can log in with your new password."
+          : null;
 
   return (
     <form action={formAction}>
       <Stack gap={4}>
-        {justRegistered ? (
+        {notice ? (
           <Text
             aria-live="polite"
             bg="brand.green/10"
@@ -44,22 +50,7 @@ export default function LoginForm() {
             px={3}
             py={2}
           >
-            Account created. You can log in now.
-          </Text>
-        ) : null}
-
-        {passwordChanged ? (
-          <Text
-            aria-live="polite"
-            bg="brand.green/10"
-            borderRadius="lg"
-            color="brand.green"
-            fontSize="sm"
-            fontWeight="medium"
-            px={3}
-            py={2}
-          >
-            Password updated. Please log in again.
+            {notice}
           </Text>
         ) : null}
 

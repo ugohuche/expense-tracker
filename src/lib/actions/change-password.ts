@@ -13,7 +13,7 @@ import {
 import { sendPasswordChangedEmail } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
 import { checkRateLimit, RATE_LIMIT_MESSAGE } from "@/lib/rate-limit";
-import { setPasswordChangedAtCache } from "@/lib/session-invalidation";
+import { setSessionVersionCache } from "@/lib/session-invalidation";
 
 const CHANGE_PASSWORD_USER_LIMIT = 10;
 
@@ -72,13 +72,34 @@ export async function changePassword(
   const passwordHash = await bcrypt.hash(newPassword, 10);
   const changedAt = new Date();
 
-  // Bumping `passwordChangedAt` makes every session signed in before now stale.
-  await prisma.user.update({
-    where: { id: userId },
-    data: { passwordHash, passwordChangedAt: changedAt },
-  });
+  let sessionVersion: number;
+  try {
+    sessionVersion = await prisma.$transaction(async (tx) => {
+      // Reset links issued before the change must not be able to set another
+      // password, so unused ones are marked as used together with the update.
+      await tx.passwordResetToken.updateMany({
+        where: { userId, usedAt: null },
+        data: { usedAt: changedAt },
+      });
 
-  setPasswordChangedAtCache(userId, changedAt);
+      // Bumping `sessionVersion` makes every existing session stale.
+      const updated = await tx.user.update({
+        where: { id: userId },
+        data: {
+          passwordHash,
+          passwordChangedAt: changedAt,
+          sessionVersion: { increment: 1 },
+        },
+        select: { sessionVersion: true },
+      });
+
+      return updated.sessionVersion;
+    });
+  } catch {
+    return { message: "Something went wrong. Please try again." };
+  }
+
+  setSessionVersionCache(userId, sessionVersion);
   after(async () => {
     await sendPasswordChangedEmail(user.email);
   });
