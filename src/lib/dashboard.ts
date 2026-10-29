@@ -1,7 +1,6 @@
 import { CATEGORY_BY_VALUE, type Category } from "@/lib/categories";
 import { formatShortMonth } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/session";
 
 const TREND_MONTHS = 6;
 const RECENT_LIMIT = 8;
@@ -68,12 +67,6 @@ export async function getDashboardData(
   userId: string,
   now: Date = new Date(),
 ): Promise<DashboardData> {
-  const currentUser = await getCurrentUser();
-
-  if (currentUser.id !== userId) {
-    throw new Error("You are not authorized to access this data.");
-  }
-
   const year = now.getUTCFullYear();
   const month = now.getUTCMonth();
 

@@ -7,12 +7,8 @@ export interface CurrentUser {
   name: string;
 }
 
-export async function getServerSession() {
-  return auth();
-}
-
 export async function getCurrentUser(): Promise<CurrentUser> {
-  const session = await getServerSession();
+  const session = await auth();
   const user = session?.user;
 
   if (!user?.id) {

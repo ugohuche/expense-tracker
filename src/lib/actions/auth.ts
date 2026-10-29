@@ -13,7 +13,6 @@ import {
   type LoginFormState,
   type SignupFormState,
 } from "@/lib/definitions";
-import { getServerSession } from "@/lib/session";
 
 export async function signup(
   _state: SignupFormState,
@@ -76,11 +75,5 @@ export async function login(
 }
 
 export async function logout() {
-  const session = await getServerSession();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
-
   await signOut({ redirectTo: "/" });
 }
