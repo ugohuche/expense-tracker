@@ -223,7 +223,8 @@ export function ExpensesHistory({
         maxW="6xl"
         mx="auto"
         px={{ base: 4, md: 6 }}
-        py={{ base: 8, md: 10 }}
+        pt={16}
+        pb={{ base: 8, md: 10 }}
       >
         <Stack gap={6}>
           <Flex
