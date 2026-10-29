@@ -62,12 +62,7 @@ export function RecentExpensesCard({
                 </Flex>
 
                 <Box minW={0}>
-                  <Text
-                    fontSize="sm"
-                    fontWeight="medium"
-                    color="fg"
-                    truncate
-                  >
+                  <Text fontSize="sm" fontWeight="medium" color="fg" truncate>
                     {expense.description ?? expense.label}
                   </Text>
                   <Text fontSize="xs" color="fg.muted">

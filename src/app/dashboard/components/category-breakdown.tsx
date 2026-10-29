@@ -54,12 +54,7 @@ export function CategoryBreakdownCard({
 
                 <Box flex="1" minW={0}>
                   <Flex align="baseline" justify="space-between" gap={3}>
-                    <Text
-                      fontSize="sm"
-                      fontWeight="medium"
-                      color="fg"
-                      truncate
-                    >
+                    <Text fontSize="sm" fontWeight="medium" color="fg" truncate>
                       {item.label}
                     </Text>
                     <Text
