@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 
+import { getUserExpenses } from "@/lib/expenses";
 import { getCurrentUser } from "@/lib/session";
 
 import { ExpensesHistory } from "./components/expenses-history";
@@ -15,7 +16,6 @@ export const instant = false;
 
 export default async function ExpensesPage() {
   await connection();
-  await getCurrentUser();
 
   const user = await getCurrentUser();
   const { expenses, currency } = await getUserExpenses(user.id);

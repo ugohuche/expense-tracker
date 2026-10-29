@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { Suspense } from "react";
 
+import { getUserExpense } from "@/lib/expenses";
 import { getCurrentUser } from "@/lib/session";
 
 import {
@@ -23,8 +24,8 @@ interface ExpenseDetailContentProps {
 
 async function ExpenseDetailContent({ params }: ExpenseDetailContentProps) {
   await connection();
-  await getCurrentUser();
 
+  const user = await getCurrentUser();
   const { id } = await params;
   const { expense, currency } = await getUserExpense(user.id, id);
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 
+import { getAccountCurrency } from "@/lib/expenses";
 import { getCurrentUser } from "@/lib/session";
 
 import { ExpenseEditor } from "../components/expense-editor";
@@ -14,7 +15,9 @@ export const instant = false;
 
 export default async function NewExpensePage() {
   await connection();
-  await getCurrentUser();
 
-  return <ExpenseEditor />;
+  const user = await getCurrentUser();
+  const currency = await getAccountCurrency(user.id);
+
+  return <ExpenseEditor defaultCurrency={currency} />;
 }
