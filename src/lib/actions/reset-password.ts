@@ -23,7 +23,6 @@ import {
   getResetTokenExpiry,
   hashResetToken,
 } from "@/lib/reset-token";
-import { setPasswordChangedAtCache } from "@/lib/session-invalidation";
 
 const NEUTRAL_MESSAGE =
   "If an account exists for that email, we've sent a reset link";
@@ -188,9 +187,20 @@ export async function resetPassword(
         throw new Error("RESET_TOKEN_ALREADY_USED");
       }
 
+      // Any other unused link for this user stops working as well.
+      await tx.passwordResetToken.updateMany({
+        where: { userId: record.userId, usedAt: null },
+        data: { usedAt: changedAt },
+      });
+
+      // Bumping `sessionVersion` makes every existing session stale.
       return tx.user.update({
         where: { id: record.userId },
-        data: { passwordHash, passwordChangedAt: changedAt },
+        data: {
+          passwordHash,
+          passwordChangedAt: changedAt,
+          sessionVersion: { increment: 1 },
+        },
         select: { id: true, email: true },
       });
     });
@@ -203,7 +213,6 @@ export async function resetPassword(
     };
   }
 
-  setPasswordChangedAtCache(updatedUser.id, changedAt);
   after(async () => {
     await sendPasswordChangedEmail(updatedUser.email);
   });
