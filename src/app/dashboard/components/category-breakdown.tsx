@@ -15,18 +15,18 @@ export function CategoryBreakdownCard({
 }: CategoryBreakdownProps) {
   return (
     <Box
-      bg="white"
+      bg="bg.panel"
       borderWidth="1px"
-      borderColor="brand.mist"
+      borderColor="border"
       borderRadius="2xl"
       boxShadow="sm"
       p={{ base: 5, md: 6 }}
     >
       <Flex align="baseline" justify="space-between" gap={4} mb={5}>
-        <Text fontSize="md" fontWeight="bold" color="brand.navy">
+        <Text fontSize="md" fontWeight="bold" color="fg">
           Spending by category
         </Text>
-        <Text fontSize="xs" color="brand.slate">
+        <Text fontSize="xs" color="fg.muted">
           This month
         </Text>
       </Flex>
@@ -57,7 +57,7 @@ export function CategoryBreakdownCard({
                     <Text
                       fontSize="sm"
                       fontWeight="medium"
-                      color="brand.navy"
+                      color="fg"
                       truncate
                     >
                       {item.label}
@@ -65,7 +65,7 @@ export function CategoryBreakdownCard({
                     <Text
                       fontSize="sm"
                       fontWeight="semibold"
-                      color="brand.navy"
+                      color="fg"
                       whiteSpace="nowrap"
                     >
                       {formatCurrency(item.total, currency)}
@@ -76,7 +76,7 @@ export function CategoryBreakdownCard({
                     mt={2}
                     h="8px"
                     borderRadius="full"
-                    bg="brand.soft-white"
+                    bg="bg.subtle"
                     overflow="hidden"
                   >
                     <Box
@@ -89,7 +89,7 @@ export function CategoryBreakdownCard({
                 </Box>
               </Flex>
 
-              <Text fontSize="xs" color="brand.slate" mt={1} ps="12">
+              <Text fontSize="xs" color="fg.muted" mt={1} ps="12">
                 {Math.round(item.share * 100)}% · {item.count} transaction
                 {item.count === 1 ? "" : "s"}
               </Text>
