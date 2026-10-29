@@ -4,6 +4,7 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",
   day: "numeric",
   year: "numeric",
+  timeZone: "UTC",
 });
 
 export function formatIncomeDate(dateKey: string): string {
@@ -11,8 +12,7 @@ export function formatIncomeDate(dateKey: string): string {
 }
 
 export function parseIncomeDateKey(dateKey: string): Date {
-  const [year, month, day] = dateKey.split("-").map(Number);
-  return new Date(year, month - 1, day);
+  return new Date(`${dateKey}T00:00:00.000Z`);
 }
 
 export function toIncomeDateKey(date: Date): string {
@@ -24,9 +24,9 @@ export function toIncomeDateKey(date: Date): string {
 
 function monthsBetween(date: Date, reference: Date): number {
   return (
-    (reference.getFullYear() - date.getFullYear()) * 12 +
-    reference.getMonth() -
-    date.getMonth()
+    (reference.getUTCFullYear() - date.getUTCFullYear()) * 12 +
+    reference.getUTCMonth() -
+    date.getUTCMonth()
   );
 }
 
@@ -53,7 +53,7 @@ export function summarizeIncomes(
       lastMonthTotal += income.amount;
     }
 
-    if (date.getFullYear() === referenceDate.getFullYear()) {
+    if (date.getUTCFullYear() === referenceDate.getUTCFullYear()) {
       yearTotal += income.amount;
     }
   }
@@ -97,7 +97,7 @@ export function filterAndSortIncomes(
       }
 
       if (filters.dateRange === "this-year") {
-        return date.getFullYear() === referenceDate.getFullYear();
+        return date.getUTCFullYear() === referenceDate.getUTCFullYear();
       }
 
       return true;
