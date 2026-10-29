@@ -7,7 +7,7 @@ import { ExpenseEditor } from "../components/expense-editor";
 
 export const metadata: Metadata = {
   title: "Add expense | Expense Tracker",
-  description: "Record a new expense in this browser.",
+  description: "Record a new expense.",
 };
 
 export const instant = false;

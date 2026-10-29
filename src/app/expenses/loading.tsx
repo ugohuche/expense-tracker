@@ -1,6 +1,6 @@
 import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
 
-import { COLORS } from "@/components/expense/colors";
+import { COLORS } from "@/components/shared/colors";
 
 export default function Loading() {
   return (

@@ -7,11 +7,12 @@ import { getCurrentUser } from "@/lib/session";
 import {
   ExpenseEditor,
   ExpenseEditorLoading,
+  ExpenseNotFound,
 } from "../components/expense-editor";
 
 export const metadata: Metadata = {
   title: "Expense | Expense Tracker",
-  description: "View or edit an expense saved in this browser.",
+  description: "View or edit a saved expense.",
 };
 
 export const instant = false;
@@ -25,8 +26,15 @@ async function ExpenseDetailContent({ params }: ExpenseDetailContentProps) {
   await getCurrentUser();
 
   const { id } = await params;
+  const { expense, currency } = await getUserExpense(user.id, id);
 
-  return <ExpenseEditor key={id} expenseId={id} />;
+  if (!expense) {
+    return <ExpenseNotFound />;
+  }
+
+  return (
+    <ExpenseEditor key={id} expense={expense} defaultCurrency={currency} />
+  );
 }
 
 export default function ExpenseDetailPage({

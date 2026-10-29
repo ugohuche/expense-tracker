@@ -13,20 +13,21 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import type { Currency } from "@/app/expenses/expense-form/constants/currencies";
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
-import { COLORS } from "@/components/expense/colors";
+import { COLORS } from "@/components/shared/colors";
 import { ExpenseForm } from "@/components/expense/expense-form";
 import {
   secondaryButtonStyles,
   surfaceStyles,
-} from "@/components/expense/styles";
+} from "@/components/shared/styles";
 
-import { loadStoredExpenses, saveStoredExpenses } from "../storage";
+import { createExpense, updateExpense } from "../actions";
 import type { ExpenseRecord } from "../types";
-import { createExpenseRecord, updateExpenseRecord } from "../utils";
 
 interface ExpenseEditorProps {
-  expenseId?: string;
+  expense?: ExpenseRecord | null;
+  defaultCurrency?: Currency;
 }
 
 function ExpenseEditorFrame({ children }: { children: React.ReactNode }) {
@@ -72,84 +73,49 @@ export function ExpenseEditorLoading() {
   );
 }
 
-function ExpenseNotFound() {
+export function ExpenseNotFound() {
   return (
-    <Stack gap="4" align="flex-start">
-      <Box>
-        <Heading
-          as="h2"
-          fontSize="lg"
-          fontWeight="semibold"
-          letterSpacing="tight"
-          color={COLORS.text}
-        >
-          Expense not found
-        </Heading>
-        <Text mt="2" fontSize="sm" lineHeight="1.6" color={COLORS.muted}>
-          This expense may have been deleted or was never saved in this browser.
-        </Text>
-      </Box>
-      <Button asChild {...secondaryButtonStyles}>
-        <Link href="/expenses">Back to expenses</Link>
-      </Button>
-    </Stack>
+    <ExpenseEditorFrame>
+      <Stack gap="4" align="flex-start">
+        <Box>
+          <Heading
+            as="h2"
+            fontSize="lg"
+            fontWeight="semibold"
+            letterSpacing="tight"
+            color={COLORS.text}
+          >
+            Expense not found
+          </Heading>
+          <Text mt="2" fontSize="sm" lineHeight="1.6" color={COLORS.muted}>
+            This expense may have been deleted or does not exist.
+          </Text>
+        </Box>
+        <Button asChild {...secondaryButtonStyles}>
+          <Link href="/expenses">Back to expenses</Link>
+        </Button>
+      </Stack>
+    </ExpenseEditorFrame>
   );
 }
 
-export function ExpenseEditor({ expenseId }: ExpenseEditorProps) {
+export function ExpenseEditor({
+  expense = null,
+  defaultCurrency = "USD",
+}: ExpenseEditorProps) {
   const router = useRouter();
-  const [expenses, setExpenses] = React.useState<ExpenseRecord[] | null>(null);
 
-  React.useEffect(() => {
-    const timeout = window.setTimeout(() => {
-      setExpenses(loadStoredExpenses());
-    }, 0);
+  const handleSubmit = async (values: ExpenseInput) => {
+    const result = expense
+      ? await updateExpense(expense.id, values)
+      : await createExpense(values);
 
-    return () => window.clearTimeout(timeout);
-  }, [expenseId]);
-
-  if (expenses === null) {
-    return <ExpenseEditorLoading />;
-  }
-
-  const expense = expenseId
-    ? (expenses.find((item) => item.id === expenseId) ?? null)
-    : null;
-
-  if (expenseId && !expense) {
-    return (
-      <ExpenseEditorFrame>
-        <ExpenseNotFound />
-      </ExpenseEditorFrame>
-    );
-  }
-
-  const handleSubmit = (values: ExpenseInput) => {
-    const storedExpenses = loadStoredExpenses();
-
-    if (expenseId) {
-      const currentExpense = storedExpenses.find(
-        (item) => item.id === expenseId,
-      );
-
-      if (!currentExpense) {
-        setExpenses(storedExpenses);
-        return;
-      }
-
-      const updatedExpense = updateExpenseRecord(currentExpense, values);
-
-      saveStoredExpenses(
-        storedExpenses.map((item) =>
-          item.id === updatedExpense.id ? updatedExpense : item,
-        ),
-      );
-    } else {
-      const createdExpense = createExpenseRecord(values);
-      saveStoredExpenses([createdExpense, ...storedExpenses]);
+    if (!result.success) {
+      throw new Error(result.error);
     }
 
     router.push("/expenses");
+    router.refresh();
   };
 
   return (
@@ -159,7 +125,7 @@ export function ExpenseEditor({ expenseId }: ExpenseEditorProps) {
         heading={expense ? "Edit expense" : "Add expense"}
         submitLabel={expense ? "Save changes" : "Save expense"}
         initialCategory={expense?.category}
-        initialCurrency={expense?.currency ?? expenses[0]?.currency ?? "USD"}
+        initialCurrency={expense?.currency ?? defaultCurrency}
         initialAmount={expense ? String(expense.amount) : undefined}
         initialDescription={expense?.description ?? undefined}
         initialExpenseDate={expense?.expenseDate}

@@ -6,9 +6,9 @@ import type { Currency } from "@/app/expenses/expense-form/constants/currencies"
 import type { ExpenseInput } from "@/app/expenses/expense-form/expense-schema";
 import type { ExpenseRecord } from "@/app/expenses/types";
 
-import { COLORS } from "./colors";
+import { COLORS } from "@/components/shared/colors";
 import { ExpenseForm } from "./expense-form";
-import { dialogSurfaceStyles } from "./styles";
+import { dialogSurfaceStyles } from "@/components/shared/styles";
 
 interface ExpenseDialogProps {
   open: boolean;

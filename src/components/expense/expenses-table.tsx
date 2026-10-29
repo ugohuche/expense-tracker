@@ -18,15 +18,15 @@ import {
   getCategoryOption,
 } from "@/app/expenses/utils";
 
-import { COLORS } from "./colors";
-import { ChevronLeftIcon, ChevronRightIcon } from "./icons";
+import { COLORS } from "@/components/shared/colors";
+import { ChevronLeftIcon, ChevronRightIcon } from "@/components/shared/icons";
 import {
   focusRing,
   primaryButtonStyles,
   secondaryButtonStyles,
   surfaceStyles,
   tableHeaderStyles,
-} from "./styles";
+} from "@/components/shared/styles";
 
 interface ExpensesTableProps {
   expenses: ExpenseRecord[];
@@ -74,9 +74,7 @@ export function ExpensesTable({
           <Text mt={0.5} fontSize="sm" color={COLORS.muted}>
             {hasAnyExpenses
               ? `${totalCount} ${totalCount === 1 ? "expense" : "expenses"}${
-                  hasFilters
-                    ? " matching your filters"
-                    : " saved in this browser"
+                  hasFilters ? " matching your filters" : " saved"
                 }`
               : "No expenses recorded yet"}
           </Text>

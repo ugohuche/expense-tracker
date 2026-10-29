@@ -9,12 +9,12 @@ import {
   getCategoryOption,
 } from "@/app/expenses/utils";
 
-import { COLORS } from "./colors";
+import { COLORS } from "@/components/shared/colors";
 import {
   dangerButtonStyles,
   dialogSurfaceStyles,
   secondaryButtonStyles,
-} from "./styles";
+} from "@/components/shared/styles";
 
 interface DeleteExpenseDialogProps {
   open: boolean;
@@ -57,8 +57,8 @@ export function DeleteExpenseDialog({
             Delete expense?
           </Dialog.Title>
           <Dialog.Description mt={2} fontSize="sm" color={COLORS.muted}>
-            This will remove the expense from this browser. This action cannot
-            be undone.
+            This will permanently remove the expense. This action cannot be
+            undone.
           </Dialog.Description>
 
           {expense ? (

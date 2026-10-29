@@ -9,14 +9,14 @@ import {
   getCategoryOption,
 } from "@/app/expenses/utils";
 
-import { COLORS } from "./colors";
-import { CloseIcon } from "./icons";
+import { COLORS } from "@/components/shared/colors";
+import { CloseIcon } from "@/components/shared/icons";
 import {
   dangerOutlineButtonStyles,
   dialogSurfaceStyles,
   focusRing,
   primaryButtonStyles,
-} from "./styles";
+} from "@/components/shared/styles";
 
 interface ExpenseDetailsDialogProps {
   open: boolean;
