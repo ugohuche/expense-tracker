@@ -21,9 +21,9 @@ const monthlySpending = [
 ];
 
 const categories = [
-  { name: "Food", value: 35, color: "#E4572E" },
-  { name: "Transport", value: 20, color: "#0E8388" },
-  { name: "Entertainment", value: 15, color: "#F2A900" },
+  { name: "Food", value: 35, color: "danger.solid" },
+  { name: "Transport", value: 20, color: "brand.solid" },
+  { name: "Entertainment", value: 15, color: "accent.solid" },
 ];
 
 const transactions = [
@@ -31,19 +31,19 @@ const transactions = [
     name: "Uber",
     category: "Transport",
     amount: "-R120",
-    color: "#E4572E",
+    color: "danger.solid",
   },
   {
     name: "Checkers",
     category: "Groceries",
     amount: "-R450",
-    color: "#E4572E",
+    color: "danger.solid",
   },
   {
     name: "Salary",
     category: "Income",
     amount: "+R5000",
-    color: "#1B9E5A",
+    color: "success.solid",
   },
 ];
 
@@ -58,14 +58,14 @@ function StatCard({
 }) {
   return (
     <Box
-      bg="white"
+      bg="bg.panel"
       p="6"
       borderRadius="xl"
       shadow="md"
       border="1px solid"
-      borderColor="gray.100"
+      borderColor="border"
     >
-      <Text fontSize="sm" color="gray.500">
+      <Text fontSize="sm" color="fg.muted">
         {label}
       </Text>
 
@@ -78,19 +78,19 @@ function StatCard({
 
 export default function Dashboard() {
   return (
-    <Box minH="100vh" bg="#F7F9FB" p={{ base: 4, md: 6 }}>
+    <Box minH="100vh" bg="bg.subtle" p={{ base: 4, md: 6 }}>
       {/* Header */}
       <Box
         mb="8"
-        bg="#0B2545"
-        color="white"
+        bg="bg.inverted"
+        color="fg.inverted"
         p={{ base: 6, md: 8 }}
         borderRadius="2xl"
         shadow="lg"
       >
         <Heading size="2xl">Expense Tracker Dashboard</Heading>
 
-        <Text mt="2" color="gray.300">
+        <Text mt="2" color="fg.inverted/75">
           Track spending, monitor budgets, and manage your finances.
         </Text>
       </Box>
@@ -104,34 +104,34 @@ export default function Dashboard() {
         }}
         gap="6"
       >
-        <StatCard label="Total Expenses" value="R8,500" color="#E4572E" />
+        <StatCard label="Total Expenses" value="R8,500" color="danger.solid" />
 
-        <StatCard label="Monthly Budget" value="R10,000" color="#0E8388" />
+        <StatCard label="Monthly Budget" value="R10,000" color="brand.fg" />
 
-        <StatCard label="Budget Left" value="R1,500" color="#1B9E5A" />
+        <StatCard label="Budget Left" value="R1,500" color="fg.success" />
 
-        <StatCard label="Savings" value="R3,200" color="#F2A900" />
+        <StatCard label="Savings" value="R3,200" color="accent.solid" />
       </Grid>
 
       {/* Monthly Spending */}
       <Box
         mt="8"
-        bg="white"
+        bg="bg.panel"
         p="6"
         borderRadius="2xl"
         shadow="md"
         border="1px solid"
-        borderColor="gray.100"
+        borderColor="border"
       >
-        <Heading size="lg" color="#0B2545">
+        <Heading size="lg" color="fg">
           Monthly Spending Trend
         </Heading>
 
-        <Text mt="2" color="gray.500">
+        <Text mt="2" color="fg.muted">
           Overview of expenses throughout the month
         </Text>
 
-        <Box mt="6" h="320px" bg="#F8FAFC" p="6" borderRadius="xl">
+        <Box mt="6" h="320px" bg="bg.subtle" p="6" borderRadius="xl">
           <Flex h="full" align="end" justify="space-between" gap="4">
             {monthlySpending.map((item) => (
               <Flex
@@ -146,16 +146,16 @@ export default function Dashboard() {
                   h={`${item.height * 4}px`}
                   maxH="260px"
                   w={{ base: "28px", md: "48px" }}
-                  bg="#0E8388"
+                  bg="brand.solid"
                   borderTopRadius="md"
                   transition="0.2s"
                   _hover={{
-                    bg: "#08676B",
+                    bg: "brand.hover",
                     transform: "translateY(-4px)",
                   }}
                 />
 
-                <Text mt="2" fontSize="sm" color="gray.600">
+                <Text mt="2" fontSize="sm" color="fg.muted">
                   {item.month}
                 </Text>
               </Flex>
@@ -175,14 +175,14 @@ export default function Dashboard() {
       >
         {/* Spending Categories */}
         <Box
-          bg="white"
+          bg="bg.panel"
           p="6"
           borderRadius="2xl"
           shadow="md"
           border="1px solid"
-          borderColor="gray.100"
+          borderColor="border"
         >
-          <Heading size="lg" color="#0B2545">
+          <Heading size="lg" color="fg">
             Spending Categories
           </Heading>
 
@@ -192,10 +192,10 @@ export default function Dashboard() {
                 <Flex justify="space-between" mb="2">
                   <Text fontWeight="medium">{category.name}</Text>
 
-                  <Text color="gray.500">{category.value}%</Text>
+                  <Text color="fg.muted">{category.value}%</Text>
                 </Flex>
 
-                <Box h="3" bg="gray.200" borderRadius="full" overflow="hidden">
+                <Box h="3" bg="bg.muted" borderRadius="full" overflow="hidden">
                   <Box
                     h="full"
                     width={`${category.value}%`}
@@ -210,31 +210,31 @@ export default function Dashboard() {
 
         {/* Budget Progress */}
         <Box
-          bg="white"
+          bg="bg.panel"
           p="6"
           borderRadius="2xl"
           shadow="md"
           border="1px solid"
-          borderColor="gray.100"
+          borderColor="border"
         >
           <Link href="/expenses/new">Add expense</Link>
 
           <Box mt="8">
             <Flex justify="space-between" mb="3">
-              <Text color="gray.600">R8,500 of R10,000 used</Text>
+              <Text color="fg.muted">R8,500 of R10,000 used</Text>
 
-              <Text fontWeight="bold" color="#1B9E5A">
+              <Text fontWeight="bold" color="fg.success">
                 85%
               </Text>
             </Flex>
 
-            <Progress.Root value={85} colorPalette="green" size="lg">
+            <Progress.Root value={85} colorPalette="success" size="lg">
               <Progress.Track>
                 <Progress.Range />
               </Progress.Track>
             </Progress.Root>
 
-            <Text mt="4" fontSize="sm" color="gray.500">
+            <Text mt="4" fontSize="sm" color="fg.muted">
               85% of monthly budget used
             </Text>
           </Box>
@@ -244,19 +244,19 @@ export default function Dashboard() {
       {/* Recent Transactions */}
       <Box
         mt="8"
-        bg="white"
+        bg="bg.panel"
         p="6"
         borderRadius="2xl"
         shadow="md"
         border="1px solid"
-        borderColor="gray.100"
+        borderColor="border"
       >
         <Flex justify="space-between" align="center" mb="6">
-          <Heading size="lg" color="#0B2545">
+          <Heading size="lg" color="fg">
             Recent Transactions
           </Heading>
 
-          <Text fontSize="sm" color="#0E8388" fontWeight="semibold">
+          <Text fontSize="sm" color="brand.fg" fontWeight="semibold">
             Latest activity
           </Text>
         </Flex>
@@ -271,12 +271,12 @@ export default function Dashboard() {
               borderBottom={
                 index !== transactions.length - 1 ? "1px solid" : "none"
               }
-              borderColor="gray.100"
+              borderColor="border"
             >
               <Box>
                 <Text fontWeight="semibold">{transaction.name}</Text>
 
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="sm" color="fg.muted">
                   {transaction.category}
                 </Text>
               </Box>

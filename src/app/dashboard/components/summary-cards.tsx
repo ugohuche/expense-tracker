@@ -16,20 +16,20 @@ interface CardConfig {
 }
 
 export function SummaryCards({ summary, topCategory }: SummaryCardsProps) {
-  const netAccent = summary.net >= 0 ? "brand.green" : "brand.red";
+  const netAccent = summary.net >= 0 ? "fg.success" : "fg.error";
 
   const cards: CardConfig[] = [
     {
       label: "Income",
       value: formatCurrency(summary.income, summary.currency),
       hint: "Received this month",
-      accent: "brand.teal",
+      accent: "brand.solid",
     },
     {
       label: "Expenses",
       value: formatCurrency(summary.expenses, summary.currency),
       hint: `${summary.transactions} transaction${summary.transactions === 1 ? "" : "s"} logged`,
-      accent: "brand.gold",
+      accent: "accent.solid",
     },
     {
       label: "Net savings",
@@ -44,7 +44,7 @@ export function SummaryCards({ summary, topCategory }: SummaryCardsProps) {
       hint: topCategory
         ? `${formatCurrency(topCategory.total, summary.currency)} spent`
         : "No expenses this month",
-      accent: "brand.navy",
+      accent: "fg",
     },
   ];
 
@@ -53,9 +53,9 @@ export function SummaryCards({ summary, topCategory }: SummaryCardsProps) {
       {cards.map((card) => (
         <Box
           key={card.label}
-          bg="white"
+          bg="bg.panel"
           borderWidth="1px"
-          borderColor="brand.mist"
+          borderColor="border"
           borderRadius="2xl"
           boxShadow="sm"
           p={5}
@@ -70,7 +70,7 @@ export function SummaryCards({ summary, topCategory }: SummaryCardsProps) {
             >
               <Box boxSize="2.5" borderRadius="full" bg={card.accent} />
             </Flex>
-            <Text fontSize="sm" color="brand.slate" fontWeight="medium">
+            <Text fontSize="sm" color="fg.muted" fontWeight="medium">
               {card.label}
             </Text>
           </Flex>
@@ -78,12 +78,12 @@ export function SummaryCards({ summary, topCategory }: SummaryCardsProps) {
           <Text
             fontSize="2xl"
             fontWeight="bold"
-            color="brand.navy"
+            color="fg"
             letterSpacing="tight"
           >
             {card.value}
           </Text>
-          <Text fontSize="xs" color="brand.slate" mt={1}>
+          <Text fontSize="xs" color="fg.muted" mt={1}>
             {card.hint}
           </Text>
         </Box>
